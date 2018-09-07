@@ -7,6 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
+    "test": "",
     "start": "node build/app",
     "dev": "nodemon build/app",
     "heroku-postbuild": "npm run build"
