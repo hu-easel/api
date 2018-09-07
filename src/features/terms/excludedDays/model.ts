@@ -1,14 +1,9 @@
 import * as Sequelize from 'sequelize';
-import { sequelize } from '../../database';
-import { ExcludedDay } from './excludedDays/model';
+import { sequelize } from '../../../database';
 
-export const SEMESTER_TYPES = ['FALL', 'SUMMER 1', 'SUMMER 2', 'INTERSESSION 1', 'INTERSESSION 2', 'SPRING'];
-
-export const Term = sequelize.define('term', {
-  type: {
-    type: Sequelize.ENUM,
-    values: SEMESTER_TYPES,
-    allowNull: false
+export const ExcludedDay = sequelize.define('excluded_day', {
+  name: {
+    type: Sequelize.STRING
   },
   startDate: {
     type: Sequelize.DATE,
@@ -19,7 +14,6 @@ export const Term = sequelize.define('term', {
     allowNull: false
   }
 }, {
-  underscored: true,
   validate: {
     startDateAfterEndDate () {
       let { startDate, endDate } = this;
@@ -32,5 +26,3 @@ export const Term = sequelize.define('term', {
     }
   }
 });
-
-Term.hasMany(ExcludedDay);
