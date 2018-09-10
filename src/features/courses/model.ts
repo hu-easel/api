@@ -13,7 +13,8 @@ export const Course = sequelize.define('course', {
     }
   },
   section: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    allowNull: false
   }
 }, {
   underscored: true
