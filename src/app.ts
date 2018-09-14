@@ -1,32 +1,45 @@
 import { sequelize } from './database';
-import { User, ROLE_STUDENT } from './features/users/model';
 import * as log from 'loglevel';
+import * as express from 'express';
+import * as bodyparser from 'body-parser';
+import router from './routes';
+import config from './config';
+import { handleError } from './middleware';
+import { UserModel } from './features/users/model';
 
 log.setLevel(log.levels.TRACE);
 
-log.info('Application is starting...');
+init();
 
-(async () => {
+function init () {
+  (async () => {
+    log.info('EASEL is starting...');
+    await initDatabase();
+
+    await UserModel.sync({ force: true });
+
+    initExpress();
+  })();
+}
+
+async function initDatabase () {
   try {
     await sequelize.authenticate();
-    log.info('Connection has been established successfully.');
-
-    await User.sync({ force: true });
-
-    await User.create({
-      firstName: 'Jerred',
-      lastName: 'Shepherd',
-      hNumber: 'H01599828',
-      password: '0',
-      role: ROLE_STUDENT
-    });
-
-    let users = await User.findAll();
-
-    log.info('Users: ', users);
+    log.info('Connection to database has been established successfully.');
   } catch (err) {
-    log.error('Unable to connect to the database:', err);
+    log.error('Unable to connect to the database: ', err);
   }
-})();
+}
 
-log.info('Application stopping');
+function initExpress () {
+  let app = express();
+  let { expressPort } = config;
+
+  app.use(bodyparser.json());
+  app.use('/api', router);
+  app.use(handleError);
+
+  app.listen(expressPort, () => {
+    log.info('Express listening on port ' + expressPort);
+  });
+}

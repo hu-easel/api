@@ -4,4 +4,6 @@ export default interface Config {
   dbName: string;
   dbUsername: string;
   dbPassword: string;
+  expressPort: number;
+  jwtSecret: string;
 }

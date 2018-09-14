@@ -8,7 +8,7 @@ export const ROLE_ADMIN = 'ADMIN';
 const USER_ROLES = [ROLE_STUDENT, ROLE_PROFESSOR, ROLE_ADMIN];
 const DEFAULT_ROLE = ROLE_STUDENT;
 
-export const User = sequelize.define('user', {
+export const UserModel = sequelize.define('user', {
   firstName: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -25,6 +25,15 @@ export const User = sequelize.define('user', {
       notEmpty: true
     }
   },
+  username: {
+    type: Sequelize.STRING,
+    primaryKey: true,
+    allowNull: false,
+    validate: {
+      isAlpha: true,
+      notEmpty: true
+    }
+  },
   hNumber: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -35,6 +44,7 @@ export const User = sequelize.define('user', {
     }
   },
   password: {
+    // todo hash
     type: Sequelize.STRING.BINARY,
     allowNull: false,
     validate: {

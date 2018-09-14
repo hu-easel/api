@@ -6,6 +6,8 @@ export default class EnvConfig implements Config {
   dbName = EnvConfig.getEnvironmentVariable('DB_NAME');
   dbUsername = EnvConfig.getEnvironmentVariable('DB_USERNAME');
   dbPassword = EnvConfig.getEnvironmentVariable('DB_PASSWORD');
+  expressPort = EnvConfig.getEnvironmentVariable('PORT');
+  jwtSecret = EnvConfig.getEnvironmentVariable('JWT_SECRET');
 
   static getEnvironmentVariable (name: string): any {
     if (process.env[name]) {

@@ -6,4 +6,6 @@ export default class InlineConfig implements Config {
   dbName = 'easel';
   dbUsername = 'root';
   dbPassword = 'password';
+  expressPort = 8080;
+  jwtSecret = 'secret';
 }
