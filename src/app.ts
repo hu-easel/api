@@ -5,7 +5,7 @@ import * as bodyparser from 'body-parser';
 import router from './routes';
 import config from './config';
 import { handleError } from './middleware';
-import { UserModel } from './features/users/model';
+import * as morgan from 'morgan';
 
 log.setLevel(log.levels.TRACE);
 
@@ -16,7 +16,8 @@ function init () {
     log.info('EASEL is starting...');
     await initDatabase();
 
-    await UserModel.sync({ force: true });
+    // Drops table
+    // await UserModel.sync({ force: true });
 
     initExpress();
   })();
@@ -35,6 +36,7 @@ function initExpress () {
   let app = express();
   let { expressPort } = config;
 
+  app.use(morgan('dev'));
   app.use(bodyparser.json());
   app.use('/api', router);
   app.use(handleError);

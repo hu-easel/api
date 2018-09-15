@@ -1,5 +1,9 @@
 import * as Sequelize from 'sequelize';
 import { sequelize } from '../../database';
+import * as bcryptjs from 'bcryptjs';
+import { promisify } from 'util';
+
+const asyncHash = promisify(bcryptjs.hash);
 
 export const ROLE_STUDENT = 'STUDENT';
 export const ROLE_PROFESSOR = 'PROFESSOR';
@@ -36,6 +40,7 @@ export const UserModel = sequelize.define('user', {
   },
   hNumber: {
     type: Sequelize.STRING,
+    unique: true,
     allowNull: false,
     validate: {
       is: /H[\d]{8}\b/i,
@@ -55,5 +60,20 @@ export const UserModel = sequelize.define('user', {
     type: Sequelize.ENUM,
     values: USER_ROLES,
     defaultValue: DEFAULT_ROLE
+  }
+}, {
+  hooks: {
+    beforeCreate: async (user: any, options) => {
+      await asyncHash(user.password, 10).then((hash) => {
+        user.password = hash;
+      });
+    },
+    beforeUpdate: async (user: any, options) => {
+      if (user.changed('password')) {
+        await asyncHash(user.password, 10).then((hash) => {
+          user.password = hash;
+        });
+      }
+    }
   }
 });

@@ -31,9 +31,9 @@ export function readUser (req: Request, res: Response, next: NextFunction) {
   res.send(user);
 }
 
-export function readUsers (req: Request, res: Response, next: NextFunction) {
+export async function readUsers (req: Request, res: Response, next: NextFunction) {
   try {
-    let users = UserModel.findAll();
+    let users = await UserModel.findAll();
     res.send(users);
   } catch (err) {
     next({
