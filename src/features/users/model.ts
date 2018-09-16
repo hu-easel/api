@@ -49,7 +49,6 @@ export const UserModel = sequelize.define('user', {
     }
   },
   password: {
-    // todo hash
     type: Sequelize.STRING.BINARY,
     allowNull: false,
     validate: {
@@ -63,17 +62,27 @@ export const UserModel = sequelize.define('user', {
   }
 }, {
   hooks: {
-    beforeCreate: async (user: any, options) => {
-      await asyncHash(user.password, 10).then((hash) => {
-        user.password = hash;
-      });
+    beforeCreate: (user: any, options) => {
+      user.password = hashPassword(user.password);
     },
-    beforeUpdate: async (user: any, options) => {
+    beforeUpdate: (user: any, options) => {
       if (user.changed('password')) {
-        await asyncHash(user.password, 10).then((hash) => {
-          user.password = hash;
-        });
+        user.password = hashPassword(user.password);
       }
+      return;
     }
   }
 });
+
+export async function validatePassword (candidate: string, actual: string): Promise<boolean> {
+  let hashedCandidate: string = await hashPassword(candidate);
+  return hashedCandidate === actual;
+}
+
+async function hashPassword (password: string): Promise<string> {
+  try {
+    return await asyncHash(password, 10);
+  } catch (err) {
+    throw new Error(err);
+  }
+}

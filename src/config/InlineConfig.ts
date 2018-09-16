@@ -8,4 +8,6 @@ export default class InlineConfig implements Config {
   dbPassword = 'password';
   expressPort = 8080;
   jwtSecret = 'secret';
+  jwtIssuer = 'cs.harding.edu';
+  registrationEnabled = true;
 }

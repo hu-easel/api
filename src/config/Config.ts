@@ -6,4 +6,6 @@ export default interface Config {
   dbPassword: string;
   expressPort: number;
   jwtSecret: string;
+  jwtIssuer: string;
+  registrationEnabled: boolean;
 }

@@ -1,10 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserModel } from './model';
+import config from '../../config';
 
 export async function addUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body;
   if (isRegister) {
-    role = null;
+    if (config.registrationEnabled) {
+      role = null;
+    } else {
+      next({
+        statusCode: 403,
+        error: 'Registration is disabled'
+      });
+      return;
+    }
   }
 
   try {
@@ -28,6 +37,9 @@ export async function addUser (req: Request, res: Response, next: NextFunction) 
 
 export function readUser (req: Request, res: Response, next: NextFunction) {
   let { user } = res.locals;
+
+  user.validatePassword('password');
+
   res.send(user);
 }
 
