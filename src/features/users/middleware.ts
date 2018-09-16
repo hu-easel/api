@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserModel } from './model';
+import { authenticate } from './authentication/middleware';
 
 export async function getUserFromParameter (req: Request, res: Response, next: NextFunction, username: string) {
   try {
@@ -22,5 +23,14 @@ export async function getUserFromParameter (req: Request, res: Response, next: N
       statusCode: 500,
       error: err
     });
+  }
+}
+
+export async function authorizeAddUser (req: Request, res: Response, next: NextFunction) {
+  if (!req.body.register) {
+    await authenticate(req, res, next);
+    // TODO check authorization
+  } else {
+    next();
   }
 }
