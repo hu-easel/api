@@ -1,43 +1,45 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import config from '../../../config';
-import { UserModel } from '../model';
+import { App } from '../../../App';
 
-export async function authenticate (req: Request, res: Response, next: NextFunction) {
+export async function authenticate(req: Request, res: Response, next: NextFunction) {
   let token: any = req.header('Authorization') as string;
   if (!token) {
     next({
       status: 400,
-      error: 'No token sent in request'
+      error: 'No token sent in request',
     });
     return;
   }
   try {
     token = await jwt.verify(token, config.jwtSecret, {
-      issuer: config.jwtIssuer
+      issuer: config.jwtIssuer,
     });
     try {
-      let user = await UserModel.findById(token.id);
+      let user = await App.db.UserModel.findById(token.id);
       res.locals.auth = {
-        user
+        user,
       };
       if (user === null) {
         next({
           status: 400,
-          error: 'Invalid authentication token. User does not exist.'
+          error: 'Invalid authentication token. User does not exist.',
         });
       }
       next();
-    } catch (err) {
+    }
+    catch (err) {
       next({
         status: 400,
-        error: err
+        error: err,
       });
     }
-  } catch (err) {
+  }
+  catch (err) {
     next({
       status: 400,
-      error: err
+      error: err,
     });
   }
 }
