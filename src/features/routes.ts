@@ -1,4 +1,4 @@
-import userRouter from './features/users/routes';
+import userRouter from './users/routes';
 import { Router } from 'express';
 
 let router = Router();

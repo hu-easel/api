@@ -16,7 +16,7 @@ export class Database {
     this.config = config;
   }
 
-  initialize () {
+  async initialize () {
     this.sequelize = new Sequelize(this.config.dbName, this.config.dbUsername, this.config.dbPassword, {
       host: this.config.dbHost,
       port: this.config.dbPort,
@@ -30,6 +30,7 @@ export class Database {
       },
       logging: log.debug
     });
+    await this.sequelize.authenticate();
   }
 
   get UserModel (): UserModel {
