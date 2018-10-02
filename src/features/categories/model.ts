@@ -1,5 +1,5 @@
 import * as Sequelize from 'sequelize';
-import { sequelize } from '../../database/index';
+import { sequelize } from '../../database';
 
 export const Category = sequelize.define('category', {
   name: {

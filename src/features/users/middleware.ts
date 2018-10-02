@@ -1,39 +1,36 @@
 import { Request, Response, NextFunction } from 'express';
 import { authenticate } from './authentication/middleware';
-import { App } from '../../App';
+import app from '../../app';
 
-export async function getUserFromParameter(req: Request, res: Response, next: NextFunction, username: string) {
+export async function getUserFromParameter (req: Request, res: Response, next: NextFunction, username: string) {
   try {
-    let user = await App.db.UserModel.findOne({
+    let user = await app.database.UserModel.findOne({
       where: {
-        username: username,
-      },
+        username: username
+      }
     });
     if (user) {
       res.locals.user = user;
       next();
-    }
-    else {
+    } else {
       next({
         statusCode: 404,
-        error: 'User not found',
+        error: 'User not found'
       });
     }
-  }
-  catch (err) {
+  } catch (err) {
     next({
       statusCode: 500,
-      error: err,
+      error: err
     });
   }
 }
 
-export async function authorizeAddUser(req: Request, res: Response, next: NextFunction) {
+export async function authorizeAddUser (req: Request, res: Response, next: NextFunction) {
   if (!req.body.register) {
     await authenticate(req, res, next);
     // TODO check authorization
-  }
-  else {
+  } else {
     next();
   }
 }

@@ -10,4 +10,5 @@ export default class InlineConfig implements Config {
   jwtSecret = 'secret';
   jwtIssuer = 'cs.harding.edu';
   registrationEnabled = true;
+  authenticationEnabled = false;
 }

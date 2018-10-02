@@ -12,9 +12,9 @@ export const sequelize = new Sequelize(config.dbName, config.dbUsername, config.
     max: 5,
     min: 0,
     acquire: 30000,
-    idle: 10000,
+    idle: 10000
   },
-  logging: log.debug,
+  logging: log.debug
 });
 
 interface Models {
@@ -25,7 +25,7 @@ export class Database {
   private sequelize?: Sequelize.Sequelize;
   private models: Models = { };
 
-  initialize(name: string, username: string, password: string) {
+  initialize (name: string, username: string, password: string) {
     this.sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
       host: config.dbHost,
       port: config.dbPort,
@@ -35,13 +35,13 @@ export class Database {
         max: 5,
         min: 0,
         acquire: 30000,
-        idle: 10000,
+        idle: 10000
       },
-      logging: log.debug,
+      logging: log.debug
     });
   }
 
-  get UserModel(): UserModel {
+  get UserModel (): UserModel {
     if (! this.sequelize) {
       throw new Error('Database is not initialized');
     }

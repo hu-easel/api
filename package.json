@@ -8,8 +8,8 @@
     "watch": "tsc -w -p tsconfig.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
     "test": "",
-    "start": "node build/app",
-    "dev": "nodemon build/app",
+    "start": "node build/server",
+    "dev": "nodemon build/server",
     "heroku-postbuild": "npm run build"
   },
   "repository": {
