@@ -4,7 +4,7 @@ import { UserRole } from './model';
 describe('user model', () => {
 
   beforeAll(() => {
-    app.database.initialize('test', 'testuser', 'testpasswd');
+    app.database.initialize();
   });
 
   test('hashes password on save', async () => {

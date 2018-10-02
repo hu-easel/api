@@ -1,8 +1,5 @@
 import * as Sequelize from 'sequelize';
-import * as bcryptjs from 'bcryptjs';
-import { promisify } from 'util';
-
-const asyncHash = promisify(bcryptjs.hash);
+import { hash } from 'bcryptjs';
 
 export enum UserRole {
   STUDENT = 'STUDENT',
@@ -96,7 +93,7 @@ export async function validatePassword (candidate: string, actual: string): Prom
 
 async function hashPassword (password: string): Promise<string> {
   try {
-    return await asyncHash(password, 10);
+    return await hash(password, 10);
   } catch (err) {
     throw new Error(err);
   }

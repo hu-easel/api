@@ -6,6 +6,7 @@ import router from './routes';
 import config from './config';
 import { handleError } from './middleware';
 import * as morgan from 'morgan';
+import app from './app';
 
 log.setLevel(log.levels.TRACE);
 
@@ -16,15 +17,13 @@ function init () {
     log.info('EASEL is starting...');
     await initDatabase();
 
-    // Drops table
-    // await UserModel.sync({ force: true });
-
     initExpress();
   })();
 }
 
 async function initDatabase () {
   try {
+    app.database.initialize();
     await sequelize.authenticate();
     log.info('Connection to database has been established successfully.');
   } catch (err) {

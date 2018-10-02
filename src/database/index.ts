@@ -23,9 +23,9 @@ interface Models {
 
 export class Database {
   private sequelize?: Sequelize.Sequelize;
-  private models: Models = { };
+  private models: Models = {};
 
-  initialize (name: string, username: string, password: string) {
+  initialize () {
     this.sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
       host: config.dbHost,
       port: config.dbPort,
@@ -42,10 +42,10 @@ export class Database {
   }
 
   get UserModel (): UserModel {
-    if (! this.sequelize) {
+    if (!this.sequelize) {
       throw new Error('Database is not initialized');
     }
-    if (! this.models.user) {
+    if (!this.models.user) {
       this.models.user = createUserModel(this.sequelize);
     }
     return this.models.user;
