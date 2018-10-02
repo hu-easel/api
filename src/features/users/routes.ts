@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authorizeAddUser, getUserFromParameter } from './middleware';
-import { addUser, readUser, readUsers, updateUser, deleteUser } from './controller';
+import { createUser, readUser, readUsers, updateUser, deleteUser } from './controller';
 import authenticationRouter from './authentication/routes';
 import { authenticate } from './authentication/middleware';
 import { checkUserIsAuthorized } from './authorization/middleware';
@@ -9,7 +9,7 @@ let router = Router();
 
 router.param('username', getUserFromParameter);
 
-router.post('/', authorizeAddUser, addUser);
+router.post('/', authorizeAddUser, createUser);
 router.get('/:username', authenticate, readUser);
 router.get('/', authenticate, checkUserIsAuthorized('PROFESSOR'), readUsers);
 router.put('/:username', authenticate, updateUser);

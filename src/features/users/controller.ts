@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import config from '../../config';
-import app from '../../app';
+import { config, database } from '../../dependencies';
+import { UserRole } from './model';
 
-export async function addUser (req: Request, res: Response, next: NextFunction) {
+export async function createUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body;
   if (isRegister) {
     if (config.registrationEnabled) {
-      role = null;
+      role = UserRole.STUDENT;
     } else {
       next({
         statusCode: 403,
@@ -17,7 +17,7 @@ export async function addUser (req: Request, res: Response, next: NextFunction) 
   }
 
   try {
-    let user = await app.database.UserModel.create({
+    let user = await database.UserModel.create({
       firstName,
       lastName,
       username,
@@ -37,15 +37,12 @@ export async function addUser (req: Request, res: Response, next: NextFunction) 
 
 export function readUser (req: Request, res: Response, next: NextFunction) {
   let { user } = res.locals;
-
-  user.validatePassword('password');
-
   res.send(user);
 }
 
 export async function readUsers (req: Request, res: Response, next: NextFunction) {
   try {
-    let users = await app.database.UserModel.findAll();
+    let users = await database.UserModel.findAll();
     res.send(users);
   } catch (err) {
     next({

@@ -1,14 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import config from '../../../config';
-import app from '../../../app';
+import { config, database } from '../../../dependencies';
 import { validatePassword } from '../model';
 
 export async function login (req: Request, res: Response, next: NextFunction) {
   let { username, password } = req.body;
 
   try {
-    let user = await app.database.UserModel.findOne({
+    let user = await database.UserModel.findOne({
       where: {
         username: username
       }

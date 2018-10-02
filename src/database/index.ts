@@ -1,34 +1,25 @@
 import * as Sequelize from 'sequelize';
-import config from '../config';
 import * as log from 'loglevel';
 import { UserModel, createUserModel } from '../features/users/model';
-
-export const sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
-  host: config.dbHost,
-  port: config.dbPort,
-  dialect: 'mysql',
-  operatorsAliases: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  logging: log.debug
-});
+import Config from '../config/Config';
 
 interface Models {
   user?: UserModel;
 }
 
 export class Database {
-  private sequelize?: Sequelize.Sequelize;
+  sequelize?: Sequelize.Sequelize;
   private models: Models = {};
+  private config: Config;
+
+  constructor (config: Config) {
+    this.config = config;
+  }
 
   initialize () {
-    this.sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
-      host: config.dbHost,
-      port: config.dbPort,
+    this.sequelize = new Sequelize(this.config.dbName, this.config.dbUsername, this.config.dbPassword, {
+      host: this.config.dbHost,
+      port: this.config.dbPort,
       dialect: 'mysql',
       operatorsAliases: false,
       pool: {

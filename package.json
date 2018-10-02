@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
-    "test": "",
+    "test": "jest",
     "start": "node build/server",
     "dev": "nodemon build/server",
     "heroku-postbuild": "npm run build"
@@ -43,8 +43,10 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "^9.4.7",
     "@types/sequelize": "^4.27.25",
+    "@types/supertest": "^2.0.6",
     "jest": "^23.6.0",
     "nodemon": "^1.17.1",
+    "supertest": "^3.3.0",
     "tslint": "^5.9.1",
     "tslint-config-semistandard": "^7.0.0",
     "typescript": "^2.7.2"
