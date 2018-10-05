@@ -4,6 +4,8 @@ import { createUser, readUser, readUsers, updateUser, deleteUser } from './contr
 import authenticationRouter from './authentication/routes';
 import { authenticate } from './authentication/middleware';
 import { checkUserIsAuthorized } from './authorization/middleware';
+import { UserRole } from './model';
+const { PROFESSOR, ADMIN } = UserRole;
 
 let router = Router();
 
@@ -11,9 +13,9 @@ router.param('username', getUserFromParameter);
 
 router.post('/', authorizeAddUser, createUser);
 router.get('/:username', authenticate, readUser);
-router.get('/', authenticate, checkUserIsAuthorized('PROFESSOR'), readUsers);
+router.get('/', authenticate, checkUserIsAuthorized(PROFESSOR), readUsers);
 router.put('/:username', authenticate, updateUser);
-router.delete('/:username', authenticate, checkUserIsAuthorized('ADMIN'), deleteUser);
+router.delete('/:username', authenticate, checkUserIsAuthorized(ADMIN), deleteUser);
 
 router.use('/login', authenticationRouter);
 

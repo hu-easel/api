@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs';
 
 export enum UserRole {
   STUDENT = 'STUDENT',
-  TEACHER = 'TEACHER',
+  PROFESSOR = 'PROFESSOR',
   ADMIN = 'ADMIN'
 }
 
@@ -71,12 +71,12 @@ export function createUserModel (sequelize: Sequelize.Sequelize) {
   }, {
     // TODO: this means you can't know if user password is encrypted or not?
     hooks: {
-      beforeCreate: (user: any, options) => {
-        user.password = hashPassword(user.password);
+      beforeCreate: async (user: any, options) => {
+        user.password = await hashPassword(user.password);
       },
-      beforeUpdate: (user: any, options) => {
+      beforeUpdate: async (user: any, options) => {
         if (user.changed('password')) {
-          user.password = hashPassword(user.password);
+          user.password = await hashPassword(user.password);
         }
         return;
       }

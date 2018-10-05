@@ -7,6 +7,10 @@ describe('user', () => {
     await database.initialize();
   });
 
+  beforeEach(async () => {
+    await database.UserModel.sync({ force: true });
+  });
+
   test('read (list)', async () => {
     await request(app)
       .get('/api/users/')
