@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { authenticate } from './authentication/middleware';
-import { database } from '../../dependencies';
+import { User } from './model';
 
 export async function getUserFromParameter (req: Request, res: Response, next: NextFunction, username: string) {
   try {
-    let user = await database.UserModel.findOne({
+    let user = await User.findOne({
       where: {
         username: username
       }

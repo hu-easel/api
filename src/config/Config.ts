@@ -9,4 +9,5 @@ export default interface Config {
   jwtIssuer: string;
   registrationEnabled: boolean;
   authenticationEnabled: boolean;
+  authorizationEnabled: boolean;
 }

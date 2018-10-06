@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { config, database } from '../../../dependencies';
+import { config } from '../../../dependencies';
+import { User } from '../model';
 
 export async function authenticate (req: Request, res: Response, next: NextFunction): Promise<void> {
   if (!config.authenticationEnabled) {
@@ -20,7 +21,7 @@ export async function authenticate (req: Request, res: Response, next: NextFunct
       issuer: config.jwtIssuer
     });
     try {
-      let user = await database.UserModel.findById(token.id);
+      let user = await User.findById(token.uuid);
       res.locals.auth = {
         user
       };

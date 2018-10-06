@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { config, database } from '../../dependencies';
-import { UserRole } from './model';
+import { config } from '../../dependencies';
+import { User, UserRole } from './model';
 
 export async function createUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body;
@@ -17,7 +17,7 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    let user = await database.UserModel.create({
+    let user = await User.create({
       firstName,
       lastName,
       username,
@@ -42,7 +42,7 @@ export function readUser (req: Request, res: Response, next: NextFunction) {
 
 export async function readUsers (req: Request, res: Response, next: NextFunction) {
   try {
-    let users = await database.UserModel.findAll();
+    let users = await User.findAll();
     res.send(users);
   } catch (err) {
     next({

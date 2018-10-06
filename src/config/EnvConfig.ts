@@ -13,6 +13,7 @@ export default class EnvConfig implements Config {
   jwtIssuer = EnvConfig.getEnvironmentVariable('EASEL_JWT_ISSUER');
   registrationEnabled = EnvConfig.getEnvironmentVariable('EASEL_REGISTRATION_ENABLED');
   authenticationEnabled = EnvConfig.getEnvironmentVariable('EASEL_AUTHENTICATION_ENABLED');
+  authorizationEnabled = EnvConfig.getEnvironmentVariable('EASEL_AUTHORIZATION_ENABLED');
 
   static getEnvironmentVariable (name: string): any {
     name = envVarPrefix + name;

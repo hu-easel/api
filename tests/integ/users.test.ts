@@ -1,14 +1,30 @@
 import * as request from 'supertest';
-import { app } from '../express';
-import { database } from '../dependencies';
+import { app } from '../../src/express';
+import { config, database } from '../../src/dependencies';
+import { User, UserRole } from '../../src/features/users/model';
 
-describe('user', () => {
+describe('test the user feature', () => {
   beforeAll(async () => {
+    config.dbName = 'easel_test';
     await database.initialize();
+    await User.sync({ force: true });
   });
 
-  beforeEach(async () => {
-    await database.UserModel.sync({ force: true });
+  afterEach(async () => {
+    await User.sync({ force: true });
+  });
+
+  test('it should return a single user', async () => {
+    let user = await User.create({
+      username: 'jdoe',
+      firstName: 'John',
+      lastName: 'Doe',
+      hNumber: 'H00000000',
+      password: 'password',
+      role: UserRole.STUDENT
+    });
+    await request(app)
+      .get('/api/user' + user.id);
   });
 
   test('read (list)', async () => {

@@ -1,14 +1,21 @@
 import * as dependencies from '../../dependencies';
+import * as model from './model';
 import { createUser, readUser, readUsers } from './controller';
+import { UserRole } from './model';
 
-let { config, database } = dependencies as any;
+let { User } = model as any;
+let { config } = dependencies as any;
 
 jest.mock('../../dependencies', () => {
   return {
-    database: {
-      UserModel: {}
-    },
     config: {}
+  };
+});
+
+jest.mock('./model', () => {
+  return {
+    User: {
+    }
   };
 });
 
@@ -19,7 +26,7 @@ describe('user controller', () => {
     let next: any;
 
     beforeEach(() => {
-      database.UserModel.create = jest.fn((user) => user);
+      User.create = jest.fn((user) => user);
       config.registrationEnabled = true;
       req = {};
       res = {
@@ -36,13 +43,14 @@ describe('user controller', () => {
           lastName: 'Doe',
           hNumber: 'H00000000',
           password: 'password',
-          isRegister: true
+          isRegister: true,
+          role: UserRole.STUDENT
         }
       };
 
       await createUser(req, res, next);
 
-      expect(database.UserModel.create.mock.calls.length).toBe(1);
+      expect(User.create.mock.calls.length).toBe(1);
       expect(res.send.mock.calls.length).toBe(1);
 
       let user = res.send.mock.calls[0][0];
@@ -99,7 +107,7 @@ describe('user controller', () => {
         }
       };
 
-      database.UserModel.create = jest.fn(() => {
+      User.create = jest.fn(() => {
         throw Error();
       });
 
@@ -155,7 +163,7 @@ describe('user controller', () => {
     ];
 
     beforeEach(() => {
-      database.UserModel.findAll = jest.fn(() => users);
+      User.findAll = jest.fn(() => users);
       req = {};
       res = {
         send: jest.fn(() => null)

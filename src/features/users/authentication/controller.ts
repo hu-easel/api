@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { config, database } from '../../../dependencies';
-import { validatePassword } from '../model';
+import { config } from '../../../dependencies';
+import { User } from '../model';
 
 export async function login (req: Request, res: Response, next: NextFunction) {
   let { username, password } = req.body;
 
   try {
-    let user = await database.UserModel.findOne({
+    let user = await User.findOne({
       where: {
         username: username
       }
     });
 
     if (user) {
-      if (await validatePassword(user.get('password'), password)) {
+      if (await user.validatePassword(password)) {
         res.locals.user = user;
         await sendJwt(req, res, next);
       } else {
@@ -43,13 +43,12 @@ export async function login (req: Request, res: Response, next: NextFunction) {
 
 async function sendJwt (req: Request, res: Response, next: NextFunction) {
   let user = res.locals.user;
-  let { id, firstName, lastName, email, hNumber } = user;
+  let { uuid, firstName, lastName, email } = user;
   let token = jwt.sign({
-    id,
+    uuid,
     firstName,
     lastName,
-    email,
-    hNumber
+    email
   }, config.jwtSecret, {
     issuer: config.jwtIssuer
   });

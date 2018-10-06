@@ -1,5 +1,16 @@
-import * as Sequelize from 'sequelize';
 import { hash } from 'bcryptjs';
+import {
+  DataType,
+  Column,
+  Is,
+  IsAlpha,
+  IsUUID,
+  Model,
+  NotEmpty,
+  PrimaryKey,
+  Table,
+  Unique, AllowNull, Default
+} from 'sequelize-typescript';
 
 export enum UserRole {
   STUDENT = 'STUDENT',
@@ -7,94 +18,57 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
-export interface UserAttributes {
-  firstName: string;
-  lastName: string;
+@Table
+export class User extends Model<User> {
+
+  @PrimaryKey
+  @IsUUID(4)
+  @Default(DataType.UUIDV4)
+  @Column
+  uuid: string;
+
+  @Unique
+  @AllowNull(false)
+  @NotEmpty
+  @Column
   username: string;
+
+  @AllowNull(false)
+  @NotEmpty
+  @IsAlpha
+  @Column
+  firstName: string;
+
+  @AllowNull(false)
+  @NotEmpty
+  @IsAlpha
+  @Column
+  lastName: string;
+
+  @Unique
+  @NotEmpty
+  @AllowNull(false)
+  @Is(/H[\d]{8}\b/i)
+  @Column
   hNumber: string;
-  role: UserRole;
+
+  @NotEmpty
+  @AllowNull(false)
+  @Column(DataType.STRING.BINARY)
   password: string;
-}
 
-export type UserInstance = Sequelize.Instance<UserAttributes>;
+  @Column
+  role: UserRole;
 
-export type UserModel = Sequelize.Model<UserInstance, UserAttributes>;
+  async validatePassword(candidate: string): Promise<boolean> {
+    return await User.hashPassword(candidate) === this.password;
+  }
 
-export function createUserModel (sequelize: Sequelize.Sequelize) {
-  return sequelize.define<UserInstance, UserAttributes>('user', {
-    firstName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        isAlpha: true,
-        notEmpty: true
-      }
-    },
-    lastName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        isAlpha: true,
-        notEmpty: true
-      }
-    },
-    username: {
-      type: Sequelize.STRING,
-      primaryKey: true,
-      allowNull: false,
-      validate: {
-        isAlpha: true,
-        notEmpty: true
-      }
-    },
-    hNumber: {
-      type: Sequelize.STRING,
-      unique: true,
-      allowNull: false,
-      validate: {
-        is: /H[\d]{8}\b/i,
-        isAlphanumeric: true,
-        notEmpty: true
-      }
-    },
-    password: {
-      type: Sequelize.STRING.BINARY,
-      allowNull: false,
-      validate: {
-        notEmpty: true
-      }
-    },
-    role: {
-      type: Sequelize.ENUM,
-      values: Object.keys(UserRole)
-    }
-  }, {
-    // TODO: this means you can't know if user password is encrypted or not?
-    hooks: {
-      beforeCreate: async (user: any, options) => {
-        user.password = await hashPassword(user.password);
-      },
-      beforeUpdate: async (user: any, options) => {
-        if (user.changed('password')) {
-          user.password = await hashPassword(user.password);
-        }
-        return;
-      }
-    }
-  });
-}
+  hashPassword(): Promise<string> {
+    return hash(this.password, 10);
+  }
 
-// export type UserModel = ReturnType<typeof createUserModel>;
-
-export async function validatePassword (candidate: string, actual: string): Promise<boolean> {
-  let hashedCandidate: string = await hashPassword(candidate);
-  return hashedCandidate === actual;
-}
-
-async function hashPassword (password: string): Promise<string> {
-  try {
-    return await hash(password, 10);
-  } catch (err) {
-    throw new Error(err);
+  static hashPassword(password: string): Promise<string> {
+    return hash(password, 10);
   }
 }

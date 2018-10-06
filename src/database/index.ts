@@ -1,15 +1,10 @@
-import * as Sequelize from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import * as log from 'loglevel';
-import { UserModel, createUserModel } from '../features/users/model';
+import { User } from '../features/users/model';
 import Config from '../config/Config';
 
-interface Models {
-  user?: UserModel;
-}
-
 export class Database {
-  sequelize?: Sequelize.Sequelize;
-  private models: Models = {};
+  sequelize?: Sequelize;
   private config: Config;
 
   constructor (config: Config) {
@@ -17,11 +12,15 @@ export class Database {
   }
 
   async initialize () {
-    this.sequelize = new Sequelize(this.config.dbName, this.config.dbUsername, this.config.dbPassword, {
-      host: this.config.dbHost,
-      port: this.config.dbPort,
+    let { config, sequelize } = this;
+    let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
+    sequelize = new Sequelize({
+      host: dbHost,
+      port: dbPort,
+      database: dbName,
+      username: dbUsername,
+      password: dbPassword,
       dialect: 'mysql',
-      operatorsAliases: false,
       pool: {
         max: 5,
         min: 0,
@@ -30,16 +29,8 @@ export class Database {
       },
       logging: log.debug
     });
-    await this.sequelize.authenticate();
-  }
 
-  get UserModel (): UserModel {
-    if (!this.sequelize) {
-      throw new Error('Database is not initialized');
-    }
-    if (!this.models.user) {
-      this.models.user = createUserModel(this.sequelize);
-    }
-    return this.models.user;
+    sequelize.addModels([User]);
+    await sequelize.authenticate();
   }
 }
