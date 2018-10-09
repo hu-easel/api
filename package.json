@@ -8,6 +8,8 @@
     "watch": "tsc -w -p tsconfig.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
     "test": "jest",
+    "coverage": "jest --coverage",
+    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
     "start": "node build/server",
     "dev": "nodemon build/server",
     "heroku-postbuild": "npm run build"
@@ -46,6 +48,7 @@
     "@types/node": "^9.4.7",
     "@types/sequelize": "^4.27.25",
     "@types/supertest": "^2.0.6",
+    "coveralls": "^3.0.2",
     "jest": "^23.6.0",
     "nodemon": "^1.17.1",
     "supertest": "^3.3.0",

@@ -11,7 +11,7 @@ describe('test the user feature', () => {
   });
 
   afterEach(async () => {
-    await User.sync({ force: true });
+    await User.truncate();
   });
 
   test('it should return a single user', async () => {

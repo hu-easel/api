@@ -1,23 +1,11 @@
 import * as dependencies from '../../dependencies';
 import * as model from './model';
 import { createUser, readUser, readUsers } from './controller';
-import { UserRole } from './model';
 
-let { User } = model as any;
-let { config } = dependencies as any;
-
-jest.mock('../../dependencies', () => {
-  return {
-    config: {}
-  };
-});
-
-jest.mock('./model', () => {
-  return {
-    User: {
-    }
-  };
-});
+const { UserRole } = model;
+const { STUDENT, ADMIN } = UserRole;
+const { User } = model as any;
+const { config } = dependencies;
 
 describe('user controller', () => {
   describe('create', () => {
@@ -44,7 +32,7 @@ describe('user controller', () => {
           hNumber: 'H00000000',
           password: 'password',
           isRegister: true,
-          role: UserRole.STUDENT
+          role: STUDENT
         }
       };
 
@@ -85,7 +73,7 @@ describe('user controller', () => {
           lastName: 'Doe',
           hNumber: 'H00000000',
           password: 'password',
-          role: 'ADMIN',
+          role: ADMIN,
           isRegister: true
         }
       };
@@ -152,13 +140,13 @@ describe('user controller', () => {
         username: 'jdoe',
         firstName: 'John',
         lastName: 'Doe',
-        role: 'STUDENT'
+        role: STUDENT
       },
       {
         username: 'jblow',
         firstName: 'Joe',
         lastName: 'Blow',
-        role: 'STUDENT'
+        role: STUDENT
       }
     ];
 
@@ -197,7 +185,7 @@ describe('user controller', () => {
           username: 'jdoe',
           firstName: 'John',
           lastName: 'Doe',
-          role: 'STUDENT'
+          role: STUDENT
         }
       };
 
@@ -207,7 +195,7 @@ describe('user controller', () => {
       expect(user.username).toBe('jdoe');
       expect(user.firstName).toBe('John');
       expect(user.lastName).toBe('Doe');
-      expect(user.role).toBe('STUDENT');
+      expect(user.role).toBe(STUDENT);
     });
   });
 });

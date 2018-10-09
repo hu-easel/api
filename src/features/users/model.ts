@@ -60,15 +60,15 @@ export class User extends Model<User> {
   @Column
   role: UserRole;
 
-  async validatePassword(candidate: string): Promise<boolean> {
+  async validatePassword (candidate: string): Promise<boolean> {
     return await User.hashPassword(candidate) === this.password;
   }
 
-  hashPassword(): Promise<string> {
+  hashPassword (): Promise<string> {
     return hash(this.password, 10);
   }
 
-  static hashPassword(password: string): Promise<string> {
+  static hashPassword (password: string): Promise<string> {
     return hash(password, 10);
   }
 }
