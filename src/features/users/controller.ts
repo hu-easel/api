@@ -25,7 +25,7 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
       password,
       role
     });
-    res.send(user);
+    res.json(user);
   } catch (err) {
     next({
       statusCode: 500,
@@ -37,13 +37,13 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
 
 export function readUser (req: Request, res: Response, next: NextFunction) {
   let { user } = res.locals;
-  res.send(user);
+  res.json(user);
 }
 
 export async function readUsers (req: Request, res: Response, next: NextFunction) {
   try {
     let users = await User.findAll();
-    res.send(users);
+    res.json(users);
   } catch (err) {
     next({
       statusCode: 500,
@@ -65,7 +65,7 @@ export async function updateUser (req: Request, res: Response, next: NextFunctio
       password,
       role
     });
-    res.send(user);
+    res.json(user);
   } catch (err) {
     next({
       statusCode: 500,
@@ -78,7 +78,7 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
   let { user } = res.locals;
   try {
     user = await user.destroy();
-    res.send(user);
+    res.json(user);
   } catch (err) {
     next({
       statusCode: 500,

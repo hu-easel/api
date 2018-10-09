@@ -55,7 +55,15 @@ export class User extends Model<User> {
   @NotEmpty
   @AllowNull(false)
   @Column(DataType.STRING.BINARY)
-  password: string;
+  get password () {
+    return this.getDataValue('password');
+  }
+
+  set password (password) {
+    User.hashPassword(password).then(hashedPassword => {
+      this.setDataValue('password', hashedPassword);
+    });
+  }
 
   @Column
   role: UserRole;
@@ -64,8 +72,14 @@ export class User extends Model<User> {
     return await User.hashPassword(candidate) === this.password;
   }
 
-  hashPassword (): Promise<string> {
-    return hash(this.password, 10);
+  toJSON () {
+    return {
+      uuid: this.uuid,
+      username: this.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      role: this.role
+    };
   }
 
   static hashPassword (password: string): Promise<string> {

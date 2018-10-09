@@ -1,6 +1,7 @@
 import * as dependencies from '../../dependencies';
 import * as model from './model';
 import { createUser, readUser, readUsers } from './controller';
+import * as uuidv4 from 'uuid/v4';
 
 const { UserRole } = model;
 const { STUDENT, ADMIN } = UserRole;
@@ -8,141 +9,215 @@ const { User } = model as any;
 const { config } = dependencies;
 
 describe('user controller', () => {
-  describe('create', () => {
+  describe('register user', () => {
     let req: any;
     let res: any;
     let next: any;
 
+    let user: any;
+    let expectedResponse: any;
+
     beforeEach(() => {
-      User.create = jest.fn((user) => user);
+      User.create = jest.fn((user) => {
+        return {
+          ...user,
+          uuid: uuidv4(),
+          toJSON: {
+            return: {
+              uuid: user.role,
+              username: user.username,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role
+            }
+          }
+        };
+      });
       config.registrationEnabled = true;
-      req = {};
+
+      req = {
+        body: {
+          isRegister: true
+        }
+      };
       res = {
-        send: jest.fn(() => null)
+        json: jest.fn(() => null)
       };
       next = jest.fn(() => null);
+
+      user = {
+        uuid: uuidv4(),
+        username: 'jdoe',
+        firstName: 'John',
+        lastName: 'Doe',
+        hNumber: 'H00000000',
+        password: 'password',
+        role: STUDENT
+      };
+
+      expectedResponse = {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role
+      };
+
+      req.body = {
+        ...req.body,
+        ...user
+      };
     });
 
-    test('can register new account when registration is enabled', async () => {
-      req = {
-        body: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          hNumber: 'H00000000',
-          password: 'password',
-          isRegister: true,
-          role: STUDENT
-        }
-      };
+    test('creates user', async () => {
+      await createUser(req, res, next);
+
+      expect(User.create).toBeCalled();
+      expect(res.json).toBeCalled();
+      expect(next).not.toBeCalled();
+
+      let actualResponse = res.json.mock.calls[0][0];
+      expect(actualResponse).toMatchObject(expectedResponse);
+    });
+
+    test('creates user with student role when no role is specified in request', async () => {
+      delete req.body.role;
 
       await createUser(req, res, next);
 
-      expect(User.create.mock.calls.length).toBe(1);
-      expect(res.send.mock.calls.length).toBe(1);
+      let actualResponse = res.json.mock.calls[0][0];
 
-      let user = res.send.mock.calls[0][0];
-      expect(user.username).toBe('jdoe');
-      expect(user.firstName).toBe('John');
-      expect(user.lastName).toBe('Doe');
+      expect(User.create).toBeCalled();
+      expect(res.json).toBeCalled();
+      expect(next).not.toBeCalled();
+
+      expect(actualResponse).toMatchObject(expectedResponse);
     });
 
-    test('role when registering without role defaults to student', async () => {
-      req = {
-        body: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          hNumber: 'H00000000',
-          password: 'password',
-          isRegister: true
-        }
-      };
+    test('creates user with student role when different role is specified in request', async () => {
+      req.body.role = ADMIN;
 
       await createUser(req, res, next);
 
-      let user = res.send.mock.calls[0][0];
-      expect(user.role).toBe('STUDENT');
-    });
-
-    test('role when registering with is overridden to student', async () => {
-      req = {
-        body: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          hNumber: 'H00000000',
-          password: 'password',
-          role: ADMIN,
-          isRegister: true
-        }
-      };
-
-      await createUser(req, res, next);
-
-      let user = res.send.mock.calls[0][0];
-      expect(user.role).toBe('STUDENT');
+      let actualResponse = res.json.mock.calls[0][0];
+      expect(actualResponse.role).toBe(STUDENT);
     });
 
     test('500 is sent when model throw error', async () => {
-      req = {
-        body: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          hNumber: 'H00000000',
-          password: 'password'
-        }
-      };
-
       User.create = jest.fn(() => {
         throw Error();
       });
 
       await createUser(req, res, next);
 
-      expect(next.mock.calls.length).toBe(1);
+      expect(User.create).toBeCalled();
+      expect(res.json).not.toBeCalled();
+      expect(next).toBeCalled();
 
       let nextArgument = next.mock.calls[0][0];
       expect(nextArgument.statusCode).toBe(500);
     });
 
-    test('cannot register new account when registration is disabled', async () => {
-      req = {
-        body: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          hNumber: 'H00000000',
-          password: 'password',
-          isRegister: true
-        }
-      };
-
+    test('403 is sent when registration is disabled', async () => {
       config.registrationEnabled = false;
 
       await createUser(req, res, next);
 
-      expect(next.mock.calls.length).toBe(1);
+      expect(User.create).not.toBeCalled();
+      expect(res.json).not.toBeCalled();
+      expect(next).toBeCalled();
 
       let nextArgument = next.mock.calls[0][0];
       expect(nextArgument.statusCode).toBe(403);
     });
   });
 
-  describe('read (list)', () => {
+  describe('create user', () => {
+    let req: any;
+    let res: any;
+    let next: any;
+
+    let user: any;
+    let expectedResponse: any;
+
+    beforeEach(() => {
+      User.create = jest.fn((user) => {
+        return {
+          ...user,
+          uuid: uuidv4()
+        };
+      });
+      config.registrationEnabled = true;
+
+      req = {
+        body: {
+        }
+      };
+      res = {
+        json: jest.fn(() => null)
+      };
+      next = jest.fn(() => null);
+
+      user = {
+        username: 'jdoe',
+        firstName: 'John',
+        lastName: 'Doe',
+        hNumber: 'H00000000',
+        password: 'password',
+        role: STUDENT
+      };
+
+      expectedResponse = {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role
+      };
+
+      req.body = {
+        ...req.body,
+        ...user
+      };
+    });
+
+    test('creates user', async () => {
+      await createUser(req, res, next);
+
+      expect(User.create).toBeCalled();
+      expect(res.json).toBeCalled();
+      expect(next).not.toBeCalled();
+
+      let actualResponse = res.json.mock.calls[0][0];
+      expect(actualResponse).toMatchObject(expectedResponse);
+    });
+
+    test('returns expected object when creating user', async () => {
+      await createUser(req, res, next);
+
+      let actualResponse = res.json.mock.calls[0][0];
+      expect(actualResponse.uuid).toBeDefined();
+      expectedResponse.uuid = actualResponse.uuid;
+
+      expect(User.create).toBeCalled();
+      expect(res.json).toBeCalledWith(expectedResponse);
+      expect(next).not.toBeCalled();
+    });
+  });
+
+  describe('read users', () => {
     let req: any;
     let res: any;
     let next: any;
 
     let users = [
       {
+        uuid: uuidv4(),
         username: 'jdoe',
         firstName: 'John',
         lastName: 'Doe',
         role: STUDENT
       },
       {
+        uuid: uuidv4,
         username: 'jblow',
         firstName: 'Joe',
         lastName: 'Blow',
@@ -154,48 +229,60 @@ describe('user controller', () => {
       User.findAll = jest.fn(() => users);
       req = {};
       res = {
-        send: jest.fn(() => null)
+        json: jest.fn(() => null)
       };
       next = jest.fn(() => null);
     });
 
-    test('can read data for multiple users', async () => {
+    test('sends users', async () => {
       await readUsers(req, res, next);
 
-      let receivedUsers = res.send.mock.calls[0][0];
-      expect(receivedUsers).toBe(users);
+      expect(User.findAll).toBeCalled();
+      expect(res.json).toBeCalledWith(users);
+      expect(next).not.toBeCalled();
     });
   });
 
-  describe('read (single)', () => {
+  describe('read user', () => {
     let req: any;
     let res: any;
     let next: any;
 
+    let user: any;
+
     beforeEach(() => {
       req = {};
       res = {
-        send: jest.fn(() => null)
+        locals: {
+        },
+        json: jest.fn(() => null)
+      };
+      next = jest.fn(() => null);
+
+      user = {
+        uuid: uuidv4(),
+        username: 'jdoe',
+        firstName: 'John',
+        lastName: 'Doe',
+        hNumber: 'H00000000',
+        password: 'password',
+        role: STUDENT
       };
     });
 
-    test('can read data for single user', async () => {
-      res.locals = {
-        user: {
-          username: 'jdoe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: STUDENT
-        }
-      };
+    test('sends user', async () => {
+      res.locals.user = user;
 
       await readUser(req, res, next);
 
-      let user = res.send.mock.calls[0][0];
-      expect(user.username).toBe('jdoe');
-      expect(user.firstName).toBe('John');
-      expect(user.lastName).toBe('Doe');
-      expect(user.role).toBe(STUDENT);
+      expect(res.json).toBeCalledWith(user);
+      expect(next).not.toBeCalled();
     });
+  });
+
+  describe('update user', () => {
+  });
+
+  describe('delete user', () => {
   });
 });
