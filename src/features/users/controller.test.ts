@@ -1,6 +1,6 @@
 import * as dependencies from '../../dependencies';
 import * as model from './model';
-import { createUser, readUser, readUsers } from './controller';
+import { createUser, readUser, readUsers, updateUser, deleteUser } from './controller';
 import * as uuidv4 from 'uuid/v4';
 
 const { UserRole } = model;
@@ -21,16 +21,7 @@ describe('user controller', () => {
       User.create = jest.fn((user) => {
         return {
           ...user,
-          uuid: uuidv4(),
-          toJSON: {
-            return: {
-              uuid: user.role,
-              username: user.username,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              role: user.role
-            }
-          }
+          uuid: uuidv4()
         };
       });
       config.registrationEnabled = true;
@@ -189,18 +180,6 @@ describe('user controller', () => {
       let actualResponse = res.json.mock.calls[0][0];
       expect(actualResponse).toMatchObject(expectedResponse);
     });
-
-    test('returns expected object when creating user', async () => {
-      await createUser(req, res, next);
-
-      let actualResponse = res.json.mock.calls[0][0];
-      expect(actualResponse.uuid).toBeDefined();
-      expectedResponse.uuid = actualResponse.uuid;
-
-      expect(User.create).toBeCalled();
-      expect(res.json).toBeCalledWith(expectedResponse);
-      expect(next).not.toBeCalled();
-    });
   });
 
   describe('read users', () => {
@@ -281,8 +260,87 @@ describe('user controller', () => {
   });
 
   describe('update user', () => {
+    let req: any;
+    let res: any;
+    let next: any;
+
+    let user: any;
+
+    beforeEach(() => {
+      req = {
+        body: {
+          firstName: 'Joe',
+          lastName: 'Blow',
+          hNumber: 'H11111111',
+          username: 'jblow',
+          password: 'newPassword',
+          role: ADMIN
+        }
+      };
+      res = {
+        locals: {
+          user
+        },
+        json: jest.fn(() => null)
+      };
+      next = jest.fn(() => null);
+
+      user = {
+        uuid: uuidv4(),
+        username: 'jdoe',
+        firstName: 'John',
+        lastName: 'Doe',
+        hNumber: 'H00000000',
+        password: 'password',
+        role: STUDENT,
+        update: jest.fn(async () => null)
+      };
+    });
+
+    test('updates user', async () => {
+      await updateUser(req, res, next);
+
+      expect(user.update).toBeCalled();
+      expect(res.json).toBeCalledWith(user);
+      expect(next).not.toBeCalled();
+    });
   });
 
   describe('delete user', () => {
+    let req: any;
+    let res: any;
+    let next: any;
+
+    let user: any;
+
+    beforeEach(() => {
+      req = {};
+      res = {
+        locals: {
+          user
+        },
+        json: jest.fn(() => null)
+      };
+      next = jest.fn(() => null);
+
+      user = {
+        uuid: uuidv4(),
+        username: 'jdoe',
+        firstName: 'John',
+        lastName: 'Doe',
+        hNumber: 'H00000000',
+        password: 'password',
+        role: STUDENT,
+        destroy: jest.fn(async () => null)
+      };
+    });
+
+    test('deletes user', async () => {
+      await deleteUser(req, res, next);
+
+      expect(user.destroy).toBeCalled();
+      expect(res.json).toBeCalledWith(user);
+      expect(next).not.toBeCalled();
+    });
   });
 });

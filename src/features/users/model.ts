@@ -1,4 +1,4 @@
-import { hash } from 'bcryptjs';
+import { hashSync, hash } from 'bcryptjs';
 import {
   DataType,
   Column,
@@ -9,7 +9,9 @@ import {
   NotEmpty,
   PrimaryKey,
   Table,
-  Unique, AllowNull, Default
+  Unique,
+  AllowNull,
+  Default
 } from 'sequelize-typescript';
 
 export enum UserRole {
@@ -18,8 +20,26 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
+export interface UserAttributes {
+  uuid: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  hNumber: string;
+  password: string;
+  role: UserRole;
+}
+
+export interface PublicUserAttributes {
+  uuid: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+}
+
 @Table
-export class User extends Model<User> {
+export class User extends Model<User> implements UserAttributes {
 
   @PrimaryKey
   @IsUUID(4)
@@ -55,14 +75,13 @@ export class User extends Model<User> {
   @NotEmpty
   @AllowNull(false)
   @Column(DataType.STRING.BINARY)
-  get password () {
+  get password (): string {
     return this.getDataValue('password');
   }
 
-  set password (password) {
-    User.hashPassword(password).then(hashedPassword => {
-      this.setDataValue('password', hashedPassword);
-    });
+  set password (password: string) {
+    password = User.hashPasswordSync(password);
+    this.setDataValue('password', password);
   }
 
   @Column
@@ -72,7 +91,7 @@ export class User extends Model<User> {
     return await User.hashPassword(candidate) === this.password;
   }
 
-  toJSON () {
+  toJSON (): PublicUserAttributes {
     return {
       uuid: this.uuid,
       username: this.username,
@@ -80,6 +99,10 @@ export class User extends Model<User> {
       lastName: this.lastName,
       role: this.role
     };
+  }
+
+  static hashPasswordSync (password: string): string {
+    return hashSync(password, 10);
   }
 
   static hashPassword (password: string): Promise<string> {

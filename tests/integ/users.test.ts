@@ -3,7 +3,7 @@ import { app } from '../../src/express';
 import { config, database } from '../../src/dependencies';
 import { User, UserRole } from '../../src/features/users/model';
 
-describe('test the user feature', () => {
+describe('user feature', () => {
   beforeAll(async () => {
     config.dbName = 'easel_test';
     await database.initialize();
@@ -14,7 +14,7 @@ describe('test the user feature', () => {
     await User.truncate();
   });
 
-  test('it should return a single user', async () => {
+  test('read user', async () => {
     let user = await User.create({
       username: 'jdoe',
       firstName: 'John',
@@ -27,13 +27,13 @@ describe('test the user feature', () => {
       .get('/api/user' + user.id);
   });
 
-  test('read (list)', async () => {
+  test('read users', async () => {
     await request(app)
       .get('/api/users/')
       .expect([]);
   });
 
-  test('create', async () => {
+  test('create user', async () => {
     await request(app)
       .post('/api/users/')
       .send({
@@ -46,7 +46,7 @@ describe('test the user feature', () => {
       });
   });
 
-  test('create (register)', async () => {
+  test('register user', async () => {
     await request(app)
       .post('/api/users/')
       .send({
