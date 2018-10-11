@@ -4,22 +4,22 @@ import { Error } from 'tslint/lib/error';
 
 export class ExpressError {
   error: Error;
-  status?: number;
+  statusCode: number;
 
-  constructor (error: Error | string, status: number) {
-    if (error instanceof Error) {
-      this.error = error;
-    } else {
+  constructor (error: Error | string, statusCode?: number) {
+    if (typeof error === 'string') {
       this.error = new Error(error);
+    } else {
+      this.error = error;
     }
-    this.status = status;
+    this.statusCode = statusCode || 500;
   }
 }
 
 // TODO have a flag for production that will show user-friendly errors instead of stack trace
 export function handleError (err: ExpressError, req: Request, res: Response, next: NextFunction) {
-  log.error(err);
-  res.status(err.status || 500);
+  log.error(err.error);
+  res.status(err.statusCode);
   res.json({
     'error': err.error
   });

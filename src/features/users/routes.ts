@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorizeAddUser, getUserFromParameter } from './middleware';
+import { authorizeAddUser, authorizeReadUser, authorizeUpdateUser, getUserFromParameter } from './middleware';
 import { createUser, readUser, readUsers, updateUser, deleteUser } from './controller';
 import authenticationRouter from './authentication/routes';
 import { authenticate } from './authentication/middleware';
@@ -12,9 +12,9 @@ let router = Router();
 router.param('username', getUserFromParameter);
 
 router.post('/', authorizeAddUser, createUser);
-router.get('/:username', authenticate, readUser);
+router.get('/:username', authenticate, authorizeReadUser, readUser);
 router.get('/', authenticate, checkUserIsAuthorized(PROFESSOR), readUsers);
-router.put('/:username', authenticate, updateUser);
+router.put('/:username', authenticate, authorizeUpdateUser, updateUser);
 router.delete('/:username', authenticate, checkUserIsAuthorized(ADMIN), deleteUser);
 
 router.use('/login', authenticationRouter);
