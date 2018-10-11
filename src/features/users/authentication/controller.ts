@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { config } from '../../../dependencies';
 import { User } from '../model';
+import { ExpressError } from '../../../middleware';
 
 export async function login (req: Request, res: Response, next: NextFunction) {
   let { username, password } = req.body;
@@ -18,26 +19,13 @@ export async function login (req: Request, res: Response, next: NextFunction) {
         res.locals.user = user;
         await sendJwt(req, res, next);
       } else {
-        next({
-          status: 401,
-          error: {
-            name: 'Invalid password'
-          }
-        });
+        next(new ExpressError('Invalid password', 401));
       }
     } else {
-      next({
-        status: 404,
-        error: {
-          name: 'User not found'
-        }
-      });
+      next(new ExpressError('User not found', 404));
     }
   } catch (err) {
-    next({
-      status: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 }
 

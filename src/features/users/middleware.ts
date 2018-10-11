@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { authenticate } from './authentication/middleware';
 import { User } from './model';
+import { ExpressError } from '../../middleware';
 
 export async function getUserFromParameter (req: Request, res: Response, next: NextFunction, username: string) {
   try {
@@ -13,16 +14,10 @@ export async function getUserFromParameter (req: Request, res: Response, next: N
       res.locals.user = user;
       next();
     } else {
-      next({
-        statusCode: 404,
-        error: 'User not found'
-      });
+      next(new ExpressError('User not found', 404));
     }
   } catch (err) {
-    next({
-      statusCode: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 }
 

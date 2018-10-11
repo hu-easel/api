@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { config } from '../../dependencies';
 import { User, UserRole } from './model';
+import { ExpressError } from '../../middleware';
 
 export async function createUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body;
@@ -8,10 +9,7 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     if (config.registrationEnabled) {
       role = UserRole.STUDENT;
     } else {
-      next({
-        statusCode: 403,
-        error: 'Registration is disabled'
-      });
+      next(new ExpressError('Registration is disabled', 403));
       return;
     }
   }
@@ -27,10 +25,7 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     });
     res.json(user);
   } catch (err) {
-    next({
-      statusCode: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 
 }
@@ -45,44 +40,35 @@ export async function readUsers (req: Request, res: Response, next: NextFunction
     let users = await User.findAll();
     res.json(users);
   } catch (err) {
-    next({
-      statusCode: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 }
 
 // TODO authorize changing role
 export async function updateUser (req: Request, res: Response, next: NextFunction) {
-  let { user } = res.locals;
-  let { firstName, lastName, username, hNumber, password, role } = req.body;
+  let user = res.locals.user as User;
+  let { firstName, lastName, username, hNumber, password, role }:
+    { firstName: string, lastName: string, username: string, hNumber: string, password: string, role: UserRole } = req.body;
   try {
-    user = await user.update({
-      firstName,
-      lastName,
-      username,
-      hNumber,
-      password,
-      role
-    });
+    firstName && (user.firstName = firstName);
+    lastName && (user.lastName = lastName);
+    username && (user.username = username);
+    hNumber && (user.hNumber = hNumber);
+    password && (user.password = password);
+    role && (user.role = role);
+    await user.save();
     res.json(user);
   } catch (err) {
-    next({
-      statusCode: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 }
 
 export async function deleteUser (req: Request, res: Response, next: NextFunction) {
-  let { user } = res.locals;
+  let user = res.locals.user;
   try {
-    user = await user.destroy();
+    await user.destroy();
     res.json(user);
   } catch (err) {
-    next({
-      statusCode: 500,
-      error: err
-    });
+    next(new ExpressError(err, 500));
   }
 }

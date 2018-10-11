@@ -279,7 +279,6 @@ describe('user controller', () => {
       };
       res = {
         locals: {
-          user
         },
         json: jest.fn(() => null)
       };
@@ -293,14 +292,16 @@ describe('user controller', () => {
         hNumber: 'H00000000',
         password: 'password',
         role: STUDENT,
-        update: jest.fn(async () => null)
+        save: jest.fn(async () => null)
       };
+
+      res.locals.user = user;
     });
 
     test('updates user', async () => {
       await updateUser(req, res, next);
 
-      expect(user.update).toBeCalled();
+      expect(user.save).toBeCalled();
       expect(res.json).toBeCalledWith(user);
       expect(next).not.toBeCalled();
     });
@@ -317,7 +318,6 @@ describe('user controller', () => {
       req = {};
       res = {
         locals: {
-          user
         },
         json: jest.fn(() => null)
       };
@@ -333,6 +333,8 @@ describe('user controller', () => {
         role: STUDENT,
         destroy: jest.fn(async () => null)
       };
+
+      res.locals.user = user;
     });
 
     test('deletes user', async () => {
