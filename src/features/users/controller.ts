@@ -95,10 +95,9 @@ export async function updateUser (req: Request, res: Response, next: NextFunctio
 }
 
 export async function deleteUser (req: Request, res: Response, next: NextFunction) {
-  let user = res.locals.user;
+  let user: User = res.locals.user;
   try {
     await user.destroy();
-    res.json(user);
   } catch (err) {
     next(new ExpressError(err, 500));
   }
