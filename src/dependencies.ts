@@ -1,5 +1,16 @@
 import { Database } from './database';
-import InlineConfig from './config/InlineConfig';
+import SimpleConfig from './config/SimpleConfig';
 
-export let config = new InlineConfig();
+export let config = new SimpleConfig(
+  false,
+  false,
+  'localhost',
+  'easel',
+  'password',
+  32768,
+  'root',
+  8080,
+  'cs.harding.edu',
+  'secret',
+  false);
 export let database = new Database(config);
