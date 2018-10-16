@@ -6,11 +6,11 @@ import { ExpressError } from '../../middleware';
 const { STUDENT } = UserRole;
 
 interface CreateUserRequest {
-  firstName: string;
-  lastName: string;
-  username: string;
-  hNumber: string;
-  password: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  hNumber?: string;
+  password?: string;
   role?: UserRole;
   isRegister?: boolean;
 }
@@ -27,6 +27,10 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
     }
   }
 
+  if (!role) {
+    role = STUDENT;
+  }
+
   try {
     let user = await User.create({
       firstName,
@@ -40,7 +44,6 @@ export async function createUser (req: Request, res: Response, next: NextFunctio
   } catch (err) {
     next(new ExpressError(err, 500));
   }
-
 }
 
 export function readUser (req: Request, res: Response, next: NextFunction) {
@@ -69,23 +72,14 @@ interface UpdateUserRequest {
 
 export async function updateUser (req: Request, res: Response, next: NextFunction) {
   let user: User = res.locals.user as User;
-  let { firstName, lastName, username, hNumber, password, role, currentPassword } = req.body as UpdateUserRequest;
+  let { firstName, lastName, username, hNumber, password, role } = req.body as UpdateUserRequest;
   try {
-    firstName && (user.firstName = firstName);
-    lastName && (user.lastName = lastName);
-    username && (user.username = username);
-    hNumber && (user.hNumber = hNumber);
-    role && (user.role = role);
-
-    if (password) {
-      if (res.locals.auth.user.uuid === user.uuid) {
-        if (!currentPassword || !await user.validatePassword(currentPassword)) {
-          next(new ExpressError('You must enter your current password to change your password', 400));
-          return;
-        }
-      }
-      user.password = password;
-    }
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (username) user.username = username;
+    if (hNumber) user.hNumber = hNumber;
+    if (role) user.role = role;
+    if (password) user.password = password;
 
     await user.save();
     res.json(user);
@@ -98,6 +92,7 @@ export async function deleteUser (req: Request, res: Response, next: NextFunctio
   let user: User = res.locals.user;
   try {
     await user.destroy();
+    res.json(user);
   } catch (err) {
     next(new ExpressError(err, 500));
   }

@@ -14,12 +14,13 @@ router.param('user_uuid',
   getUserFromParameter);
 
 router.post('/',
-  authorizeAddUser,
+  authenticate,
+  authorizeAddUser(),
   createUser);
 
 router.get('/:user_uuid',
   authenticate,
-  authorizeReadUser,
+  authorizeReadUser(),
   readUser);
 
 router.get('/',
@@ -29,7 +30,7 @@ router.get('/',
 
 router.put('/:user_uuid',
   authenticate,
-  authorizeUpdateUser,
+  authorizeUpdateUser(),
   updateUser);
 
 router.delete('/:user_uuid',
@@ -37,6 +38,6 @@ router.delete('/:user_uuid',
   checkUserIsAuthorized(ADMIN),
   deleteUser);
 
-router.use('/login', authenticationRouter);
+router.use('/authentication', authenticationRouter);
 
 export default router;

@@ -11,7 +11,7 @@ export async function authenticate (req: Request, res: Response, next: NextFunct
   }
   let token: any = req.header('Authorization') as string;
   if (!token) {
-    next(new ExpressError('No jwt sent it request', 400));
+    next();
     return;
   }
   try {
@@ -20,8 +20,10 @@ export async function authenticate (req: Request, res: Response, next: NextFunct
     });
     try {
       let user = await User.findById(token.uuid);
+      console.log('authentication');
+      console.log(user);
       res.locals.auth = {
-        user
+        user: user
       };
       if (user === null) {
         next(new ExpressError('Invalid jwt; user does not exist', 400));

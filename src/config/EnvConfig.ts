@@ -1,3 +1,4 @@
+import * as log from 'loglevel';
 import Config from './Config';
 
 const envVarPrefix = 'EASEL_';
@@ -20,7 +21,7 @@ export default class EnvConfig implements Config {
     if (process.env[name]) {
       return process.env[name];
     } else {
-      console.log('Environment variable %s has not been set', name);
+      log.error('Environment variable %s has not been set', name);
       return undefined;
     }
   }

@@ -1,6 +1,5 @@
 import * as log from 'loglevel';
 import { NextFunction, Request, Response } from 'express';
-import { Error } from 'tslint/lib/error';
 
 export class ExpressError {
   error: Error;
@@ -9,6 +8,7 @@ export class ExpressError {
   constructor (error: Error | string, statusCode?: number) {
     if (typeof error === 'string') {
       this.error = new Error(error);
+      console.log(this.error);
     } else {
       this.error = error;
     }
@@ -20,7 +20,5 @@ export class ExpressError {
 export function handleError (err: ExpressError, req: Request, res: Response, next: NextFunction) {
   log.error(err.error);
   res.status(err.statusCode);
-  res.json({
-    'error': err.error
-  });
+  res.json(err);
 }

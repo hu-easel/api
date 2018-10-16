@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { User, UserRole } from '../model';
 import { config } from '../../../dependencies';
 import { ExpressError } from '../../../middleware';
@@ -10,19 +10,29 @@ let UserRoleValues = {
   [ADMIN]: 2
 };
 
-export function checkUserIsAuthorized (requiredRole: UserRole) {
-  return async function (req: Request, res: Response, next: NextFunction) {
-    if (!config.authorizationEnabled) {
-      next();
-      return;
-    }
+export function checkUserIsAuthorized (requiredRole: UserRole, action?: string, resource?: string): RequestHandler {
+  return checkAuthorizationIsEnabled(() => {
+    return async function (req: Request, res: Response, next: NextFunction) {
+      let { role } = res.locals.auth.user as User;
 
-    let { role } = res.locals.auth.user as User;
+      if (UserRoleValues[requiredRole] >= UserRoleValues[role]) {
+        next();
+      } else {
+        if (action && resource) {
+          next(new ExpressError('You must be a ' + requiredRole + ' to ' + action + ' ' + resource, 400));
+        }
+        next(new ExpressError('You are not authorized to do that', 400));
+      }
+    };
+  });
+}
 
-    if (UserRoleValues[requiredRole] >= UserRoleValues[role]) {
+export function checkAuthorizationIsEnabled (middleware: RequestHandler): RequestHandler {
+  if (config.authorizationEnabled) {
+    return middleware;
+  } else {
+    return (req: Request, res: Response, next: NextFunction) => {
       next();
-    } else {
-      next(new ExpressError('You are not authorized to do that', 400));
-    }
-  };
+    };
+  }
 }

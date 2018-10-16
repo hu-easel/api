@@ -27,7 +27,7 @@ export class Database {
         acquire: 30000,
         idle: 10000
       },
-      logging: log.debug
+      logging: log.trace
     });
 
     sequelize.addModels([User]);
