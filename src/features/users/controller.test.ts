@@ -24,7 +24,7 @@ describe('user controller', () => {
           uuid: uuidv4()
         };
       });
-      config.registrationEnabled = true;
+      config.isRegistrationEnabled = true;
 
       req = {
         body: {
@@ -109,7 +109,7 @@ describe('user controller', () => {
     });
 
     test('403 is sent when registration is disabled', async () => {
-      config.registrationEnabled = false;
+      config.isRegistrationEnabled = false;
 
       await createUser(req, res, next);
 
@@ -137,7 +137,7 @@ describe('user controller', () => {
           uuid: uuidv4()
         };
       });
-      config.registrationEnabled = true;
+      config.isRegistrationEnabled = true;
 
       req = {
         body: {

@@ -25,14 +25,12 @@ export async function getUserFromParameter (req: Request, res: Response, next: N
  * Require that a user be an admin if registration is not enabled
  */
 export function authorizeAddUser (): RequestHandler {
-  return checkAuthorizationIsEnabled(() => {
-    return (req: Request, res: Response, next: NextFunction) => {
-      if (!req.body.isRegister) {
-        checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
-      } else {
-        next();
-      }
-    };
+  return checkAuthorizationIsEnabled((req: Request, res: Response, next: NextFunction) => {
+    if (!req.body.isRegister) {
+      checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
+    } else {
+      next();
+    }
   });
 }
 
@@ -40,16 +38,14 @@ export function authorizeAddUser (): RequestHandler {
  * Require that the user is an admin if reading a user other than themself
  */
 export function authorizeReadUser (): RequestHandler {
-  return checkAuthorizationIsEnabled(() => {
-    return (req: Request, res: Response, next: NextFunction) => {
-      let targetUser = res.locals.user;
-      let authenticatedUser = res.locals.auth.user;
-      if (targetUser.uuid === authenticatedUser.uuid) {
-        next();
-      } else {
-        checkUserIsAuthorized(UserRole.PROFESSOR)(req, res, next);
-      }
-    };
+  return checkAuthorizationIsEnabled((req: Request, res: Response, next: NextFunction) => {
+    let targetUser = res.locals.user;
+    let authenticatedUser = res.locals.auth.user;
+    if (targetUser.uuid === authenticatedUser.uuid) {
+      next();
+    } else {
+      checkUserIsAuthorized(UserRole.PROFESSOR)(req, res, next);
+    }
   });
 }
 
@@ -57,17 +53,15 @@ export function authorizeReadUser (): RequestHandler {
  * Require the user is an admin if changing a user's role or hNumber, or updating another user
  */
 export function authorizeUpdateUser (): RequestHandler {
-  return checkAuthorizationIsEnabled(() => {
-    return (req: Request, res: Response, next: NextFunction) => {
-      let { role, hNumber } = req.body;
-      let targetUser = res.locals.user;
-      let authenticatedUser = res.locals.auth.user;
+  return checkAuthorizationIsEnabled((req: Request, res: Response, next: NextFunction) => {
+    let { role, hNumber } = req.body;
+    let targetUser = res.locals.user;
+    let authenticatedUser = res.locals.auth.user;
 
-      if (role || hNumber || targetUser.uuid !== authenticatedUser.uuid) {
-        checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
-      } else {
-        next();
-      }
-    };
+    if (role || hNumber || targetUser.uuid !== authenticatedUser.uuid) {
+      checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
+    } else {
+      next();
+    }
   });
 }

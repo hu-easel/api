@@ -1,4 +1,4 @@
-import { hashSync, hash } from 'bcryptjs';
+import { hashSync, hash, compare } from 'bcryptjs';
 import {
   DataType,
   Column,
@@ -13,6 +13,8 @@ import {
   AllowNull,
   Default
 } from 'sequelize-typescript';
+
+const SALT_ROUNDS = 10;
 
 export enum UserRole {
   STUDENT = 'STUDENT',
@@ -84,11 +86,13 @@ export class User extends Model<User> implements UserAttributes {
     this.setDataValue('password', password);
   }
 
+  @AllowNull(false)
+  @Default(UserRole.STUDENT)
   @Column
   role: UserRole;
 
-  async validatePassword (candidate: string): Promise<boolean> {
-    return await User.hashPassword(candidate) === this.password;
+  validatePassword (candidate: string): Promise<boolean> {
+    return compare(candidate, this.password);
   }
 
   toJSON (): PublicUserAttributes {
@@ -102,10 +106,10 @@ export class User extends Model<User> implements UserAttributes {
   }
 
   static hashPasswordSync (password: string): string {
-    return hashSync(password, 10);
+    return hashSync(password, SALT_ROUNDS);
   }
 
   static hashPassword (password: string): Promise<string> {
-    return hash(password, 10);
+    return hash(password, SALT_ROUNDS);
   }
 }

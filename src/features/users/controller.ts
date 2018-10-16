@@ -19,18 +19,13 @@ interface CreateUserRequest {
 export async function createUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body as CreateUserRequest;
   if (isRegister) {
-    if (config.registrationEnabled) {
+    if (config.isRegistrationEnabled) {
       role = STUDENT;
     } else {
       next(new ExpressError('Registration is disabled', 403));
       return;
     }
   }
-
-  if (!role) {
-    role = STUDENT;
-  }
-
   try {
     let user = await User.create({
       firstName,

@@ -14,27 +14,27 @@ router.param('user_uuid',
   getUserFromParameter);
 
 router.post('/',
-  authenticate,
+  authenticate(false),
   authorizeAddUser(),
   createUser);
 
 router.get('/:user_uuid',
-  authenticate,
+  authenticate(true),
   authorizeReadUser(),
   readUser);
 
 router.get('/',
-  authenticate,
+  authenticate(true),
   checkUserIsAuthorized(PROFESSOR),
   readUsers);
 
 router.put('/:user_uuid',
-  authenticate,
+  authenticate(true),
   authorizeUpdateUser(),
   updateUser);
 
 router.delete('/:user_uuid',
-  authenticate,
+  authenticate(true),
   checkUserIsAuthorized(ADMIN),
   deleteUser);
 

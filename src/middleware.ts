@@ -8,15 +8,21 @@ export class ExpressError {
   constructor (error: Error | string, statusCode?: number) {
     if (typeof error === 'string') {
       this.error = new Error(error);
-      console.log(this.error);
     } else {
       this.error = error;
     }
     this.statusCode = statusCode || 500;
   }
+
+  toJSON () {
+    return {
+      name: this.error.name,
+      message: this.error.message,
+      stack: this.error.stack
+    };
+  }
 }
 
-// TODO have a flag for production that will show user-friendly errors instead of stack trace
 export function handleError (err: ExpressError, req: Request, res: Response, next: NextFunction) {
   log.error(err.error);
   res.status(err.statusCode);
