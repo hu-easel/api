@@ -1,8 +1,8 @@
 import Config from './Config';
 
 export default class SimpleConfig implements Config {
-  authenticationEnabled: boolean;
-  authorizationEnabled: boolean;
+  isAuthenticationEnabled: boolean;
+  isAuthorizationEnabled: boolean;
   dbHost: string;
   dbName: string;
   dbPassword: string;
@@ -11,11 +11,25 @@ export default class SimpleConfig implements Config {
   expressPort: number;
   jwtIssuer: string;
   jwtSecret: string;
-  registrationEnabled: boolean;
+  isRegistrationEnabled: boolean;
+  isDevelopmentMode: boolean;
+  shouldForceModelSync: boolean;
 
-  constructor (authenticationEnabled: boolean, authorizationEnabled: boolean, dbHost: string, dbName: string, dbPassword: string, dbPort: number, dbUsername: string, expressPort: number, jwtIssuer: string, jwtSecret: string, registrationEnabled: boolean) {
-    this.authenticationEnabled = authenticationEnabled;
-    this.authorizationEnabled = authorizationEnabled;
+  constructor (isAuthenticationEnabled: boolean,
+               isAuthorizationEnabled: boolean,
+               dbHost: string,
+               dbName: string,
+               dbPassword: string,
+               dbPort: number,
+               dbUsername: string,
+               expressPort: number,
+               jwtIssuer: string,
+               jwtSecret: string,
+               isRegistrationEnabled: boolean,
+               isDevelopmentMode: boolean,
+               shouldForceModelSync: boolean) {
+    this.isAuthenticationEnabled = isAuthenticationEnabled;
+    this.isAuthorizationEnabled = isAuthorizationEnabled;
     this.dbHost = dbHost;
     this.dbName = dbName;
     this.dbPassword = dbPassword;
@@ -24,6 +38,8 @@ export default class SimpleConfig implements Config {
     this.expressPort = expressPort;
     this.jwtIssuer = jwtIssuer;
     this.jwtSecret = jwtSecret;
-    this.registrationEnabled = registrationEnabled;
+    this.isRegistrationEnabled = isRegistrationEnabled;
+    this.isDevelopmentMode = isDevelopmentMode;
+    this.shouldForceModelSync = shouldForceModelSync;
   }
 }

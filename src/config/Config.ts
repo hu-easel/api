@@ -7,7 +7,9 @@ export default interface Config {
   expressPort: number;
   jwtSecret: string;
   jwtIssuer: string;
-  registrationEnabled: boolean;
-  authenticationEnabled: boolean;
-  authorizationEnabled: boolean;
+  isRegistrationEnabled: boolean;
+  isAuthenticationEnabled: boolean;
+  isAuthorizationEnabled: boolean;
+  isDevelopmentMode: boolean;
+  shouldForceModelSync: boolean;
 }

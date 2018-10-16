@@ -4,17 +4,19 @@ import Config from './Config';
 const envVarPrefix = 'EASEL_';
 
 export default class EnvConfig implements Config {
-  dbHost = EnvConfig.getEnvironmentVariable('EASEL_DB_HOST');
-  dbPort = EnvConfig.getEnvironmentVariable('EASEL_DB_PORT');
-  dbName = EnvConfig.getEnvironmentVariable('EASEL_DB_NAME');
-  dbUsername = EnvConfig.getEnvironmentVariable('EASEL_DB_USERNAME');
-  dbPassword = EnvConfig.getEnvironmentVariable('EASEL_DB_PASSWORD');
-  expressPort = EnvConfig.getEnvironmentVariable('EASEL_EXPRESS_PORT');
-  jwtSecret = EnvConfig.getEnvironmentVariable('EASEL_JWT_SECRET');
-  jwtIssuer = EnvConfig.getEnvironmentVariable('EASEL_JWT_ISSUER');
-  registrationEnabled = EnvConfig.getEnvironmentVariable('EASEL_REGISTRATION_ENABLED');
-  authenticationEnabled = EnvConfig.getEnvironmentVariable('EASEL_AUTHENTICATION_ENABLED');
-  authorizationEnabled = EnvConfig.getEnvironmentVariable('EASEL_AUTHORIZATION_ENABLED');
+  dbHost = EnvConfig.getEnvironmentVariable('DB_HOST');
+  dbPort = EnvConfig.getEnvironmentVariable('DB_PORT');
+  dbName = EnvConfig.getEnvironmentVariable('DB_NAME');
+  dbUsername = EnvConfig.getEnvironmentVariable('DB_USERNAME');
+  dbPassword = EnvConfig.getEnvironmentVariable('DB_PASSWORD');
+  expressPort = EnvConfig.getEnvironmentVariable('EXPRESS_PORT');
+  jwtSecret = EnvConfig.getEnvironmentVariable('JWT_SECRET');
+  jwtIssuer = EnvConfig.getEnvironmentVariable('JWT_ISSUER');
+  isRegistrationEnabled = EnvConfig.getEnvironmentVariable('IS_REGISTRATION_ENABLED');
+  isAuthenticationEnabled = EnvConfig.getEnvironmentVariable('IS_AUTHENTICATION_ENABLED');
+  isAuthorizationEnabled = EnvConfig.getEnvironmentVariable('IS_AUTHORIZATION_ENABLED');
+  isDevelopmentMode = EnvConfig.getEnvironmentVariable('IS_DEVELOPMENT_MODE');
+  shouldForceModelSync = EnvConfig.getEnvironmentVariable('SHOULD_FORCE_MODEL_SYNC');
 
   static getEnvironmentVariable (name: string): any {
     name = envVarPrefix + name;

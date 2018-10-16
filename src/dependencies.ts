@@ -2,8 +2,8 @@ import { Database } from './database';
 import SimpleConfig from './config/SimpleConfig';
 
 export let config = new SimpleConfig(
-  false,
-  false,
+  true,
+  true,
   'localhost',
   'easel',
   'password',
@@ -12,5 +12,7 @@ export let config = new SimpleConfig(
   8080,
   'cs.harding.edu',
   'secret',
+  true,
+  true,
   false);
 export let database = new Database(config);
