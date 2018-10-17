@@ -1,8 +1,14 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { config } from '../../../dependencies';
 import { User } from '../model';
 import { ExpressError } from '../../../middleware';
+
+export function initLocals (req: Request, res: Response, next: NextFunction) {
+  res.locals.authentication = {
+  };
+  next();
+}
 
 export function authenticate (required: boolean): RequestHandler {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -19,6 +25,7 @@ export function authenticate (required: boolean): RequestHandler {
       }
       return;
     }
+    token = token.replace('Bearer ', '');
     try {
       token = await
         jwt.verify(token, config.jwtSecret, {

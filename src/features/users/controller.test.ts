@@ -1,6 +1,6 @@
 import * as dependencies from '../../dependencies';
 import * as model from './model';
-import { createUser, readUser, readUsers, updateUser, deleteUser } from './controller';
+import { createUser, deleteUser, readUser, readUsers, updateUser } from './controller';
 import * as uuidv4 from 'uuid/v4';
 
 const { UserRole } = model;
@@ -140,8 +140,7 @@ describe('user controller', () => {
       config.isRegistrationEnabled = true;
 
       req = {
-        body: {
-        }
+        body: {}
       };
       res = {
         json: jest.fn(() => null)
@@ -232,8 +231,7 @@ describe('user controller', () => {
     beforeEach(() => {
       req = {};
       res = {
-        locals: {
-        },
+        locals: {},
         json: jest.fn(() => null)
       };
       next = jest.fn(() => null);
@@ -278,8 +276,7 @@ describe('user controller', () => {
         }
       };
       res = {
-        locals: {
-        },
+        locals: {},
         json: jest.fn(() => null)
       };
       next = jest.fn(() => null);
@@ -317,8 +314,7 @@ describe('user controller', () => {
     beforeEach(() => {
       req = {};
       res = {
-        locals: {
-        },
+        locals: {},
         json: jest.fn(() => null)
       };
       next = jest.fn(() => null);

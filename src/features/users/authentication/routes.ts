@@ -1,8 +1,18 @@
 import { Router } from 'express';
-import { login } from './controller';
+import { loadCandidateUser, validateCandidatePassword, validateLoginRequest, sendJwt } from './controller';
+import { initLocals } from './middleware';
 
 let router = Router();
 
-router.post('/login', login);
+router.use('/',
+  initLocals
+);
+
+router.post('/login',
+  validateLoginRequest,
+  loadCandidateUser,
+  validateCandidatePassword,
+  sendJwt
+);
 
 export default router;

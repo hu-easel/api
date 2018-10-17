@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { config } from '../../dependencies';
 import { User, UserRole } from './model';
 import { ExpressError } from '../../middleware';

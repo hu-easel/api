@@ -1,7 +1,9 @@
-import { hashSync, hash, compare } from 'bcryptjs';
+import { compare, hash, hashSync } from 'bcryptjs';
 import {
-  DataType,
+  AllowNull,
   Column,
+  DataType,
+  Default,
   Is,
   IsAlpha,
   IsUUID,
@@ -9,9 +11,7 @@ import {
   NotEmpty,
   PrimaryKey,
   Table,
-  Unique,
-  AllowNull,
-  Default
+  Unique
 } from 'sequelize-typescript';
 
 const SALT_ROUNDS = 10;
@@ -73,6 +73,10 @@ export class User extends Model<User> implements UserAttributes {
   @Is(/H[\d]{8}\b/i)
   @Column
   hNumber: string;
+  @AllowNull(false)
+  @Default(UserRole.STUDENT)
+  @Column
+  role: UserRole;
 
   @NotEmpty
   @AllowNull(false)
@@ -86,10 +90,13 @@ export class User extends Model<User> implements UserAttributes {
     this.setDataValue('password', password);
   }
 
-  @AllowNull(false)
-  @Default(UserRole.STUDENT)
-  @Column
-  role: UserRole;
+  static hashPasswordSync (password: string): string {
+    return hashSync(password, SALT_ROUNDS);
+  }
+
+  static hashPassword (password: string): Promise<string> {
+    return hash(password, SALT_ROUNDS);
+  }
 
   validatePassword (candidate: string): Promise<boolean> {
     return compare(candidate, this.password);
@@ -103,13 +110,5 @@ export class User extends Model<User> implements UserAttributes {
       lastName: this.lastName,
       role: this.role
     };
-  }
-
-  static hashPasswordSync (password: string): string {
-    return hashSync(password, SALT_ROUNDS);
-  }
-
-  static hashPassword (password: string): Promise<string> {
-    return hash(password, SALT_ROUNDS);
   }
 }

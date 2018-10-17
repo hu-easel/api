@@ -24,10 +24,10 @@ export async function getUserFromParameter (req: Request, res: Response, next: N
 /**
  * Require that a user be an admin if registration is not enabled
  */
-export function authorizeAddUser (): RequestHandler {
+export function authorizeCreateUser (): RequestHandler {
   return checkAuthorizationIsEnabled((req: Request, res: Response, next: NextFunction) => {
     if (!req.body.isRegister) {
-      checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
+      checkUserIsAuthorized(UserRole.ADMIN, 'CREATE', 'USER/*')(req, res, next);
     } else {
       next();
     }
@@ -44,7 +44,7 @@ export function authorizeReadUser (): RequestHandler {
     if (targetUser.uuid === authenticatedUser.uuid) {
       next();
     } else {
-      checkUserIsAuthorized(UserRole.PROFESSOR)(req, res, next);
+      checkUserIsAuthorized(UserRole.PROFESSOR, 'READ/' + targetUser.username, targetUser.username)(req, res, next);
     }
   });
 }
@@ -59,7 +59,7 @@ export function authorizeUpdateUser (): RequestHandler {
     let authenticatedUser = res.locals.auth.user;
 
     if (role || hNumber || targetUser.uuid !== authenticatedUser.uuid) {
-      checkUserIsAuthorized(UserRole.ADMIN)(req, res, next);
+      checkUserIsAuthorized(UserRole.ADMIN, 'UPDATE', 'USER/' + targetUser.username)(req, res, next);
     } else {
       next();
     }
