@@ -22,16 +22,6 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
-export interface UserAttributes {
-  uuid: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  hNumber: string;
-  password: string;
-  role: UserRole;
-}
-
 export interface PublicUserAttributes {
   uuid: string;
   username: string;
@@ -41,7 +31,7 @@ export interface PublicUserAttributes {
 }
 
 @Table
-export class User extends Model<User> implements UserAttributes {
+export class User extends Model<User> {
 
   @PrimaryKey
   @IsUUID(4)
@@ -73,6 +63,7 @@ export class User extends Model<User> implements UserAttributes {
   @Is(/H[\d]{8}\b/i)
   @Column
   hNumber: string;
+
   @AllowNull(false)
   @Default(UserRole.STUDENT)
   @Column

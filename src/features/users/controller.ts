@@ -6,13 +6,23 @@ import { ExpressError } from '../../middleware';
 const { STUDENT } = UserRole;
 
 interface CreateUserRequest {
-  firstName?: string;
-  lastName?: string;
-  username?: string;
-  hNumber?: string;
-  password?: string;
-  role?: UserRole;
+  firstName: string;
+  lastName: string;
+  username: string;
+  hNumber: string;
+  password: string;
+  role: UserRole;
   isRegister?: boolean;
+}
+
+export async function validateCreateUserRequest (req: Request, res: Response, next: NextFunction) {
+  let { firstName, lastName, username, hNumber, password, role } = req.body;
+  if (firstName && lastName && username && hNumber && password && role) {
+    next();
+  } else {
+    next(new ExpressError('Invalid request', 422));
+    return;
+  }
 }
 
 // TODO support adding users in bulk
@@ -62,7 +72,6 @@ interface UpdateUserRequest {
   hNumber?: string;
   password?: string;
   role?: UserRole;
-  currentPassword?: string;
 }
 
 export async function updateUser (req: Request, res: Response, next: NextFunction) {

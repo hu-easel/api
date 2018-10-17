@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authorizeCreateUser, authorizeReadUser, authorizeUpdateUser, getUserFromParameter } from './middleware';
-import { createUser, deleteUser, readUser, readUsers, updateUser } from './controller';
+import { createUser, deleteUser, readUser, readUsers, updateUser, validateCreateUserRequest } from './controller';
 import authenticationRouter from './authentication/routes';
 import { authenticate } from './authentication/middleware';
 import { checkUserIsAuthorized } from './authorization/middleware';
@@ -14,6 +14,7 @@ router.param('user_uuid',
   getUserFromParameter);
 
 router.post('/',
+  validateCreateUserRequest,
   authenticate(false),
   authorizeCreateUser(),
   createUser);
