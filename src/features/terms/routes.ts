@@ -37,3 +37,5 @@ router.delete('/:term_uuid',
   authenticate(true),
   checkUserIsAuthorized(ADMIN, 'DELETE', 'TERM/*'),
   deleteTerm);
+
+export default router;

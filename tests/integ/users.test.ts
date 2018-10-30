@@ -10,6 +10,17 @@ describe('user feature', () => {
     await User.sync({ force: true });
   });
 
+  beforeEach(async () => {
+    await User.create({
+      username: 'admin',
+      firstName: 'admin',
+      lastName: 'admin',
+      password: 'admin',
+      hNumber: 'H00000000',
+      role: UserRole.ADMIN
+    });
+  });
+
   afterEach(async () => {
     await User.truncate();
   });
