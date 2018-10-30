@@ -6,6 +6,7 @@ import { User, UserRole } from './features/users/model';
 log.setLevel(log.levels.DEBUG);
 
 let { expressPort } = config;
+let server;
 
 (async () => {
   log.info('EASEL is starting...');
@@ -30,6 +31,8 @@ let { expressPort } = config;
     await User.sync();
   }
 
-  await app.listen(expressPort);
+  server = await app.listen(expressPort);
   log.info('Express listening on port ' + expressPort);
 })();
+
+export default server;

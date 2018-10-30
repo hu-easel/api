@@ -23,6 +23,10 @@ describe('user model', () => {
     await User.truncate();
   });
 
+  afterAll(async () => {
+    database.sequelize && await database.sequelize.close();
+  });
+
   test('valid user is created', async () => {
     let user = new User({
       ...validUser

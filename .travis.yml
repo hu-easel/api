@@ -10,9 +10,7 @@ cache:
 services:
   - mysql
 script:
-  - npm test
-  - npm run coverage
-  - npm run coveralls
+  - npm test && npm run coverage && npm run coveralls
 env:
   global:
     - IS_TRAVIS=true
