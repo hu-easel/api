@@ -20,7 +20,7 @@ export default class EnvConfig implements Config {
 
   static getEnvironmentVariable (name: string): any {
     name = envVarPrefix + name;
-    if (process.env[name]) {
+    if (process.env.hasOwnProperty(name)) {
       return process.env[name];
     } else {
       log.error('Environment variable %s has not been set', name);
