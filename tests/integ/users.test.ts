@@ -16,18 +16,6 @@ describe('user feature', () => {
 
   beforeAll(async () => {
     config.dbName = 'easel_test';
-
-    // TODO extract this
-    if (process.env.IS_TRAVIS) {
-      config.dbHost = '127.0.0.1';
-      config.dbUsername = 'travis';
-      config.dbPassword = '';
-      config.dbPort = 3306;
-    }
-
-    config.isAuthenticationEnabled = true;
-    config.isAuthorizationEnabled = true;
-
     await database.initialize();
     await User.sync({ force: true });
   });
