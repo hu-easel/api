@@ -9,7 +9,7 @@
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
     "test": "jest --detectOpenHandles",
     "coverage": "jest --coverage",
-    "coveralls": "cat ./tests/coverage/lcov.info | coveralls",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "start": "node build/server",
     "dev": "nodemon build/server",
     "heroku-postbuild": "npm run build"
