@@ -7,9 +7,9 @@
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "coverage": "jest --coverage",
-    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
+    "coveralls": "cat ./tests/coverage/lcov.info | coveralls",
     "start": "node build/server",
     "dev": "nodemon build/server",
     "heroku-postbuild": "npm run build"

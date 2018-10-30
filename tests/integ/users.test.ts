@@ -34,6 +34,10 @@ describe('user feature', () => {
     await User.truncate();
   });
 
+  afterAll(async () => {
+    database.sequelize && await database.sequelize.close();
+  });
+
   test('read user', async () => {
     let user = await User.create({
       username: 'jdoe',
