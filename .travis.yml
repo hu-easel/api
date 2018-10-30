@@ -1,4 +1,5 @@
 language: node_js
+sudo: required
 node_js:
   - "node"
 notifications:
@@ -6,5 +7,11 @@ notifications:
 cache:
   directories:
     - node_modules
+services:
+  - mysql
 script:
   - npm run coveralls
+env:
+  - IS_TRAVIS=true
+before_install:
+  - mysql -e 'CREATE DATABASE easel_test;'

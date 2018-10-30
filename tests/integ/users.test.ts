@@ -6,6 +6,15 @@ import { User, UserRole } from '../../src/features/users/model';
 describe('user feature', () => {
   beforeAll(async () => {
     config.dbName = 'easel_test';
+
+    // TODO extract this
+    if (process.env.IS_TRAVIS) {
+      config.dbHost = '127.0.0.1';
+      config.dbUsername = 'travis';
+      config.dbPassword = '';
+      config.dbPort = 3306;
+    }
+
     await database.initialize();
     await User.sync({ force: true });
   });
