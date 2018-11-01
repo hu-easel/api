@@ -12,26 +12,43 @@ export class Database {
   }
 
   async initialize () {
-    let { config, sequelize } = this;
-    let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
-    sequelize = new Sequelize({
-      host: dbHost,
-      port: dbPort,
-      database: dbName,
-      username: dbUsername,
-      password: dbPassword,
-      dialect: 'mysql',
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      },
-      operatorsAliases: false,
-      logging: log.trace
-    });
+    log.info('Initializing sequelize');
 
-    sequelize.addModels([User]);
-    await sequelize.authenticate();
+    let { config, sequelize } = this;
+
+    if (sequelize) {
+      log.error('Sequelize is already initialized');
+    } else {
+      let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
+      sequelize = new Sequelize({
+        host: dbHost,
+        port: dbPort,
+        database: dbName,
+        username: dbUsername,
+        password: dbPassword,
+        dialect: 'mysql',
+        pool: {
+          max: 5,
+          min: 0,
+          acquire: 30000,
+          idle: 10000
+        },
+        operatorsAliases: false,
+        logging: log.trace
+      });
+
+      sequelize.addModels([User]);
+      await sequelize.authenticate();
+    }
+  }
+
+  close (): any {
+    if (this.sequelize) {
+      log.info('Closing sequelize');
+      return this.sequelize.close();
+    } else {
+      log.error('Sequelize is not initialized');
+      return null;
+    }
   }
 }

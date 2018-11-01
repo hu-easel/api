@@ -35,7 +35,7 @@ describe('user feature', () => {
   });
 
   afterAll(async () => {
-    database.sequelize && await database.sequelize.close();
+    await database.close();
   });
 
   test('read user', async () => {

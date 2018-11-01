@@ -24,7 +24,7 @@ describe('user model', () => {
   });
 
   afterAll(async () => {
-    database.sequelize && await database.sequelize.close();
+    await database.close();
   });
 
   test('valid user is created', async () => {
