@@ -4,7 +4,7 @@ import { User } from '../features/users/model';
 import Config from '../config/Config';
 
 export class Database {
-  sequelize?: Sequelize;
+  sequelize?: Sequelize = undefined;
   private config: Config;
 
   constructor (config: Config) {
@@ -16,7 +16,7 @@ export class Database {
 
     let { config, sequelize } = this;
 
-    if (sequelize) {
+    if (sequelize !== undefined) {
       log.error('Sequelize is already initialized');
     } else {
       let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
@@ -43,7 +43,7 @@ export class Database {
   }
 
   close (): any {
-    if (this.sequelize) {
+    if (this.sequelize !== undefined) {
       log.info('Closing sequelize');
       return this.sequelize.close();
     } else {
