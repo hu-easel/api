@@ -2,6 +2,7 @@ import * as dependencies from '../../dependencies';
 import * as model from './model';
 import { createUser, deleteUser, readUser, readUsers, updateUser } from './controller';
 import * as uuidv4 from 'uuid/v4';
+import * as log from 'loglevel';
 
 const { UserRole } = model;
 const { STUDENT, ADMIN } = UserRole;
@@ -16,6 +17,10 @@ describe('user controller', () => {
   describe('register user', () => {
     let user: any;
     let expectedResponse: any;
+
+    beforeAll(() => {
+      log.setLevel(log.levels.DEBUG);
+    });
 
     beforeEach(() => {
       User.create = jest.fn((user) => {

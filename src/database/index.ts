@@ -4,7 +4,7 @@ import { User } from '../features/users/model';
 import Config from '../config/Config';
 
 export class Database {
-  sequelize?: Sequelize = undefined;
+  sequelize?: Sequelize;
   private config: Config;
 
   constructor (config: Config) {
@@ -14,13 +14,14 @@ export class Database {
   async initialize () {
     log.info('Initializing sequelize');
 
-    let { config, sequelize } = this;
+    let { config } = this;
+    // let sequelize = this.sequelize;
 
-    if (sequelize !== undefined) {
+    if (this.sequelize) {
       log.error('Sequelize is already initialized');
     } else {
       let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
-      sequelize = new Sequelize({
+      this.sequelize = new Sequelize({
         host: dbHost,
         port: dbPort,
         database: dbName,
@@ -37,13 +38,13 @@ export class Database {
         logging: log.trace
       });
 
-      sequelize.addModels([User]);
-      await sequelize.authenticate();
+      this.sequelize.addModels([User]);
+      await this.sequelize.authenticate();
     }
   }
 
   close (): any {
-    if (this.sequelize !== undefined) {
+    if (this.sequelize) {
       log.info('Closing sequelize');
       return this.sequelize.close();
     } else {
