@@ -9,11 +9,11 @@ const { User } = model as any;
 const { config } = dependencies;
 
 describe('user controller', () => {
-  describe('register user', () => {
-    let req: any;
-    let res: any;
-    let next: any;
+  let req: any;
+  let res: any;
+  let next: any;
 
+  describe('register user', () => {
     let user: any;
     let expectedResponse: any;
 
@@ -123,10 +123,6 @@ describe('user controller', () => {
   });
 
   describe('create user', () => {
-    let req: any;
-    let res: any;
-    let next: any;
-
     let user: any;
     let expectedResponse: any;
 
@@ -182,10 +178,6 @@ describe('user controller', () => {
   });
 
   describe('read users', () => {
-    let req: any;
-    let res: any;
-    let next: any;
-
     let users = [
       {
         uuid: uuidv4(),
@@ -222,10 +214,6 @@ describe('user controller', () => {
   });
 
   describe('read user', () => {
-    let req: any;
-    let res: any;
-    let next: any;
-
     let user: any;
 
     beforeEach(() => {
@@ -258,10 +246,6 @@ describe('user controller', () => {
   });
 
   describe('update user', () => {
-    let req: any;
-    let res: any;
-    let next: any;
-
     let user: any;
 
     beforeEach(() => {
@@ -305,10 +289,6 @@ describe('user controller', () => {
   });
 
   describe('delete user', () => {
-    let req: any;
-    let res: any;
-    let next: any;
-
     let user: any;
 
     beforeEach(() => {

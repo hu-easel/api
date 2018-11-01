@@ -1,3 +1,7 @@
+test('test', () => {
+  //
+});
+
 // import { config, database } from '../../dependencies';
 // import { User, UserRole } from './model';
 //

@@ -1,3 +1,7 @@
+test('test', () => {
+  //
+});
+
 // import * as request from 'supertest';
 // import { app } from '../../src/express';
 // import { config, database } from '../../src/dependencies';
