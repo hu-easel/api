@@ -3,7 +3,7 @@ import { app } from '../../src/express';
 import { config, database } from '../../src/dependencies';
 import { User, UserRole } from '../../src/features/users/model';
 
-describe('user feature', () => {
+describe('users feature', () => {
   let jwt: string;
   let adminUser = {
     username: 'admin',
@@ -17,7 +17,7 @@ describe('user feature', () => {
   beforeAll(async () => {
     config.dbName = 'easel_test';
     await database.initialize();
-    await User.sync({ force: true });
+    await User.sync();
   });
 
   beforeEach(async () => {
@@ -28,10 +28,6 @@ describe('user feature', () => {
         username: 'admin',
         password: 'admin'
       })).body.token;
-  });
-
-  afterEach(async () => {
-    await User.truncate();
   });
 
   afterAll(async () => {

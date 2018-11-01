@@ -2,6 +2,8 @@ import { Sequelize } from 'sequelize-typescript';
 import * as log from 'loglevel';
 import { User } from '../features/users/model';
 import Config from '../config/Config';
+import { Term } from '../features/terms/model';
+import { Course } from '../features/courses/model';
 
 export class Database {
   sequelize?: Sequelize;
@@ -15,7 +17,6 @@ export class Database {
     log.info('Initializing sequelize');
 
     let { config } = this;
-    // let sequelize = this.sequelize;
 
     if (this.sequelize) {
       log.error('Sequelize is already initialized');
@@ -38,7 +39,11 @@ export class Database {
         logging: log.trace
       });
 
-      this.sequelize.addModels([User]);
+      this.sequelize.addModels([
+        User,
+        Term,
+        Course
+      ]);
       await this.sequelize.authenticate();
     }
   }

@@ -21,22 +21,14 @@ describe('user model', () => {
     await User.sync({ force: true });
   });
 
-  afterEach(async () => {
-    await User.truncate();
-  });
-
   afterAll(async () => {
     await database.close();
   });
 
   test('valid user is created', async () => {
-    let user = new User({
-      ...validUser
-    });
+    let user = new User(validUser);
 
     let { password, ...eveythingElse } = validUser;
     expect(user).toMatchObject(eveythingElse);
-    console.log(user.password);
-    console.log(await user.validatePassword(password));
   });
 });
