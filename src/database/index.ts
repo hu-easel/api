@@ -14,13 +14,13 @@ export class Database {
   }
 
   async initialize () {
-    log.info('Initializing sequelize');
-
+    log.info('Trying to initialize sequelize');
     let { config } = this;
 
     if (this.sequelize) {
       log.error('Sequelize is already initialized');
     } else {
+      log.info('Initializing sequelize');
       let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
       this.sequelize = new Sequelize({
         host: dbHost,
