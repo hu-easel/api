@@ -5,7 +5,7 @@ import EnvConfig from './config/EnvConfig';
 
 export let config: Config;
 
-if (process.env.IS_TRAVIS) {
+if (process.env.IS_TRAVIS || process.env.NODE_ENV === 'production') {
   config = new EnvConfig();
 } else {
   config = new SimpleConfig(

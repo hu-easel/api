@@ -1,7 +1,7 @@
 import { AllowNull, Column, DataType, Default, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
 
 @Table
-export class Course extends Model<Course> {
+export class Listing extends Model<Listing> {
   @PrimaryKey
   @IsUUID(4)
   @Default(DataType.UUIDV4)

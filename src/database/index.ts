@@ -3,7 +3,7 @@ import * as log from 'loglevel';
 import { User } from '../features/users/model';
 import Config from '../config/Config';
 import { Term } from '../features/terms/model';
-import { Course } from '../features/courses/model';
+import { Listing } from '../features/courses/listing/model';
 
 export class Database {
   sequelize?: Sequelize;
@@ -42,7 +42,7 @@ export class Database {
       this.sequelize.addModels([
         User,
         Term,
-        Course
+        Listing
       ]);
       await this.sequelize.authenticate();
     }
