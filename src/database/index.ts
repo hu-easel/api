@@ -5,6 +5,7 @@ import Config from '../config/Config';
 import { Term } from '../features/terms/model';
 import { Listing } from '../features/courses/listings/model';
 import { Content } from '../features/courses/contents/model';
+import { Course } from '../features/courses/model';
 
 export class Database {
   sequelize?: Sequelize;
@@ -44,10 +45,29 @@ export class Database {
         User,
         Term,
         Listing,
-        Content
+        Content,
+        Course
       ]);
       await this.sequelize.authenticate();
     }
+  }
+
+  async sync (force: boolean) {
+    await User.sync({
+      force
+    });
+    await Term.sync({
+      force
+    });
+    await Listing.sync({
+      force
+    });
+    await Content.sync({
+      force
+    });
+    await Course.sync({
+      force
+    });
   }
 
   close (): any {

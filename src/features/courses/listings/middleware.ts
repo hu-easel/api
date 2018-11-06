@@ -6,11 +6,7 @@ import { ListingResponseLocals } from './types';
 export async function getListingFromParameter (req: Request, res: Response, next: NextFunction, listingUuid: string) {
   let locals = res.locals as ListingResponseLocals;
   try {
-    let listing: Listing | null = await Listing.findOne({
-      where: {
-        uuid: listingUuid
-      }
-    });
+    let listing: Listing | null = await Listing.findById(listingUuid);
     if (listing) {
       locals.listingParam = listing;
       next();

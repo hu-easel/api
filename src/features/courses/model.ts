@@ -7,11 +7,12 @@ import {
   ForeignKey,
   IsUUID,
   Model,
-  PrimaryKey
+  PrimaryKey, Table
 } from 'sequelize-typescript';
 import { Content } from './contents/model';
 import { Term } from '../terms/model';
 
+@Table
 export class Course extends Model<Course> {
   @PrimaryKey
   @IsUUID(4)
@@ -31,7 +32,6 @@ export class Course extends Model<Course> {
   termUuid: string;
 
   @BelongsTo(() => Term)
-  @Column
   term: Term;
 
   @AllowNull(false)

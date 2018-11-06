@@ -6,7 +6,7 @@ import { getTermFromParameter } from './middleware';
 import { createTerm, deleteTerm, readTerm, readTerms, updateTerm} from './controller';
 import { validateCreateTermRequest } from './validator';
 
-const { ADMIN } = UserRole;
+const { ADMIN, STUDENT } = UserRole;
 
 let router = Router();
 
@@ -21,12 +21,12 @@ router.post('/',
 
 router.get('/:term_uuid',
   authenticate(true),
-  checkUserIsAuthorized(ADMIN, 'READ', 'TERM/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'TERM/*'),
   readTerm);
 
 router.get('/',
   authenticate(true),
-  checkUserIsAuthorized(ADMIN, 'READ', 'TERM/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'TERM/*'),
   readTerms);
 
 router.put('/:term_uuid',

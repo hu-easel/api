@@ -11,7 +11,7 @@ interface CreateListingRequest {
 export async function createListing (req: Request, res: Response, next: NextFunction) {
   let { department, identifier } = req.body as CreateListingRequest;
   try {
-    let listing = Listing.create({
+    let listing = await Listing.create({
       department,
       identifier
     });

@@ -8,7 +8,7 @@ import { createContent, deleteContent, readContent, readContents, updateContent 
 
 let router = Router();
 
-const { PROFESSOR } = UserRole;
+const { PROFESSOR, STUDENT } = UserRole;
 
 router.param('content_uuid',
   getContentFromParameter);
@@ -21,12 +21,12 @@ router.post('/',
 
 router.get('/:content_uuid',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'CONTENT/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'CONTENT/*'),
   readContent);
 
 router.get('/',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'CONTENT/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'CONTENT/*'),
   readContents);
 
 router.put('/:content_uuid',

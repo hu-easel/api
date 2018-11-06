@@ -8,7 +8,7 @@ import { validateCreateCourseRequest } from './validator';
 import { createCourse, deleteCourse, readCourse, readCourses, updateCourse } from './controller';
 import { getCourseFromParameter } from './middleware';
 
-const { PROFESSOR } = UserRole;
+const { PROFESSOR, STUDENT } = UserRole;
 
 let router = Router();
 
@@ -26,12 +26,12 @@ router.post('/',
 
 router.get('/:course_uuid',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'COURSE/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'COURSE/*'),
   readCourse);
 
 router.get('/',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'COURSE/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'COURSE/*'),
   readCourses);
 
 router.put('/:course_uuid',

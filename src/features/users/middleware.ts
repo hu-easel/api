@@ -5,11 +5,7 @@ import { checkAuthorizationIsEnabled, checkUserIsAuthorized } from './authorizat
 
 export async function getUserFromParameter (req: Request, res: Response, next: NextFunction, userUuid: string) {
   try {
-    let user: User | null = await User.findOne({
-      where: {
-        uuid: userUuid
-      }
-    });
+    let user: User | null = await User.findById(userUuid);
     if (user) {
       res.locals.user = user;
       next();

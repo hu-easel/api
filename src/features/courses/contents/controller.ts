@@ -11,7 +11,7 @@ interface CreateContentRequest {
 export async function createContent (req: Request, res: Response, next: NextFunction) {
   let { name, listingUuid } = req.body as CreateContentRequest;
   try {
-    let content = Content.create({
+    let content = await Content.create({
       name,
       listingUuid
     });

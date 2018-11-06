@@ -13,7 +13,7 @@ import { validateCreateListingRequest } from './validator';
 
 let router = Router();
 
-const { PROFESSOR } = UserRole;
+const { PROFESSOR, STUDENT } = UserRole;
 
 router.param('listing_uuid',
   getListingFromParameter);
@@ -26,12 +26,12 @@ router.post('/',
 
 router.get('/:listing_uuid',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'LISTING/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'LISTING/*'),
   readListing);
 
 router.get('/',
   authenticate(true),
-  checkUserIsAuthorized(PROFESSOR, 'READ', 'LISTING/*'),
+  checkUserIsAuthorized(STUDENT, 'READ', 'LISTING/*'),
   readListings);
 
 router.put('/:listing_uuid',

@@ -6,11 +6,7 @@ import { CourseResponseLocals } from './types';
 export async function getCourseFromParameter (req: Request, res: Response, next: NextFunction, courseUuid: string) {
   let locals = res.locals as CourseResponseLocals;
   try {
-    let course: Course | null = await Course.findOne({
-      where: {
-        uuid: courseUuid
-      }
-    });
+    let course: Course | null = await Course.findById(courseUuid);
     if (course) {
       locals.courseParam = course;
       next();

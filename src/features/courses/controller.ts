@@ -12,7 +12,7 @@ interface CreateCourseRequest {
 export async function createCourse (req: Request, res: Response, next: NextFunction) {
   let { contentUuid, termUuid, section } = req.body as CreateCourseRequest;
   try {
-    let course = Course.create({
+    let course = await Course.create({
       contentUuid,
       termUuid,
       section
