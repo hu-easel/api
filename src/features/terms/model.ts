@@ -1,4 +1,5 @@
-import { AllowNull, Column, DataType, Default, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { AllowNull, Column, DataType, Default, HasMany, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { Course } from '../courses/model';
 
 export enum TermType {
   FALL,
@@ -28,4 +29,7 @@ export class Term extends Model<Term> {
   @AllowNull(false)
   @Column
   endDate: Date;
+
+  @HasMany(() => Course)
+  courses: Course[];
 }

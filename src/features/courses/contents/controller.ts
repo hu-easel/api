@@ -5,13 +5,15 @@ import { ContentResponseLocals } from './types';
 
 interface CreateContentRequest {
   name: string;
+  listingUuid: string;
 }
 
 export async function createContent (req: Request, res: Response, next: NextFunction) {
-  let { name } = req.body as CreateContentRequest;
+  let { name, listingUuid } = req.body as CreateContentRequest;
   try {
     let content = Content.create({
-      name
+      name,
+      listingUuid
     });
     res.json(content);
   } catch (err) {
@@ -35,13 +37,15 @@ export async function readContents (req: Request, res: Response, next: NextFunct
 
 interface UpdateContentRequest {
   name?: string;
+  listingUuid?: string;
 }
 
 export async function updateContent (req: Request, res: Response, next: NextFunction) {
   // TODO can this line be cleaned up?
   let content = (res.locals as ContentResponseLocals).contentParam as Content;
-  let { name } = req.body as UpdateContentRequest;
+  let { name, listingUuid } = req.body as UpdateContentRequest;
   if (name) content.name = name;
+  if (listingUuid) content.listingUuid = listingUuid;
   try {
     await content.save();
   } catch (err) {

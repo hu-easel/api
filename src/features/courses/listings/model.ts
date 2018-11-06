@@ -1,4 +1,5 @@
-import { AllowNull, Column, DataType, Default, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { AllowNull, Column, DataType, Default, HasMany, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { Content } from '../contents/model';
 
 @Table
 export class Listing extends Model<Listing> {
@@ -15,4 +16,7 @@ export class Listing extends Model<Listing> {
   @AllowNull(false)
   @Column
   identifier: number;
+
+  @HasMany(() => Content)
+  contents: Content[];
 }

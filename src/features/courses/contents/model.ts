@@ -1,4 +1,17 @@
-import { AllowNull, Column, DataType, Default, IsUUID, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  AllowNull,
+  BelongsTo,
+  Column,
+  DataType,
+  Default,
+  ForeignKey, HasMany,
+  IsUUID,
+  Model,
+  PrimaryKey,
+  Table
+} from 'sequelize-typescript';
+import { Listing } from '../listings/model';
+import { Course } from '../model';
 
 @Table
 export class Content extends Model<Content> {
@@ -11,4 +24,14 @@ export class Content extends Model<Content> {
   @AllowNull(false)
   @Column
   name: string;
+
+  @ForeignKey(() => Listing)
+  @Column
+  listingUuid: string;
+
+  @BelongsTo(() => Listing)
+  listing: Listing;
+
+  @HasMany(() => Course)
+  courses: Course[];
 }
