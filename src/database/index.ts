@@ -4,6 +4,7 @@ import { User } from '../features/users/model';
 import Config from '../config/Config';
 import { Term } from '../features/terms/model';
 import { Listing } from '../features/courses/listings/model';
+import { Content } from '../features/courses/contents/model';
 
 export class Database {
   sequelize?: Sequelize;
@@ -42,7 +43,8 @@ export class Database {
       this.sequelize.addModels([
         User,
         Term,
-        Listing
+        Listing,
+        Content
       ]);
       await this.sequelize.authenticate();
     }

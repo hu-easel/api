@@ -2,6 +2,9 @@ import * as log from 'loglevel';
 import { config, database } from './dependencies';
 import { app } from './express';
 import { User, UserRole } from './features/users/model';
+import { Term } from './features/terms/model';
+import { Listing } from './features/courses/listings/model';
+import { Content } from './features/courses/contents/model';
 
 log.setLevel(log.levels.DEBUG);
 
@@ -18,6 +21,15 @@ let server;
       await User.sync({
         force: true
       });
+      await Term.sync({
+        force: true
+      });
+      await Listing.sync({
+        force: true
+      });
+      await Content.sync({
+        force: true
+      });
       await User.create({
         username: 'admin',
         firstName: 'admin',
@@ -29,6 +41,9 @@ let server;
     }
   } else {
     await User.sync();
+    await Term.sync();
+    await Listing.sync();
+    await Content.sync();
   }
 
   server = await app.listen(expressPort);
