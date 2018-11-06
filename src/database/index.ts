@@ -3,7 +3,7 @@ import * as log from 'loglevel';
 import { User } from '../features/users/model';
 import Config from '../config/Config';
 import { Term } from '../features/terms/model';
-import { Listing } from '../features/courses/listing/model';
+import { Listing } from '../features/courses/listings/model';
 
 export class Database {
   sequelize?: Sequelize;

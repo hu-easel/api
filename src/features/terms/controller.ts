@@ -8,16 +8,6 @@ interface CreateTermRequest {
   endDate: Date;
 }
 
-export function validateCreateTermRequest (req: Request, res: Response, next: NextFunction) {
-  let { type, startDate, endDate } = req.body;
-  if (type && startDate && endDate) {
-    next();
-  } else {
-    next(new ExpressError('Invalid request', 422));
-    return;
-  }
-}
-
 export async function createTerm (req: Request, res: Response, next: NextFunction) {
   let { type, startDate, endDate } = req.body as CreateTermRequest;
   try {

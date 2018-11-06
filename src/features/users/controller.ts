@@ -15,16 +15,6 @@ interface CreateUserRequest {
   isRegister?: boolean;
 }
 
-export async function validateCreateUserRequest (req: Request, res: Response, next: NextFunction) {
-  let { firstName, lastName, username, hNumber, password, role } = req.body;
-  if (firstName && lastName && username && hNumber && password && role) {
-    next();
-  } else {
-    next(new ExpressError('Invalid request', 422));
-    return;
-  }
-}
-
 // TODO support adding users in bulk
 export async function createUser (req: Request, res: Response, next: NextFunction) {
   let { firstName, lastName, username, hNumber, password, role, isRegister } = req.body as CreateUserRequest;

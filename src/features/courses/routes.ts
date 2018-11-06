@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import listingRouter from './listing/routes';
+import listingRouter from './listings/routes';
 
 let router = Router();
 

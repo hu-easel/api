@@ -3,7 +3,8 @@ import { authenticate } from '../users/authentication/middleware';
 import { checkUserIsAuthorized } from '../users/authorization/middleware';
 import { UserRole } from '../users/model';
 import { getTermFromParameter } from './middleware';
-import { createTerm, deleteTerm, readTerm, readTerms, updateTerm, validateCreateTermRequest } from './controller';
+import { createTerm, deleteTerm, readTerm, readTerms, updateTerm} from './controller';
+import { validateCreateTermRequest } from './validator';
 
 const { ADMIN } = UserRole;
 

@@ -8,9 +8,8 @@ import {
   deleteListing,
   readListing,
   readListings,
-  updateListing,
-  validateCreateListingRequest
-} from './controller';
+  updateListing} from './controller';
+import { validateCreateListingRequest } from './validator';
 
 let router = Router();
 
@@ -40,7 +39,7 @@ router.put('/:listing_uuid',
   checkUserIsAuthorized(PROFESSOR, 'UPDATE', 'LISTING/*'),
   updateListing);
 
-router.delete('/listing_uuid',
+router.delete('/:listing_uuid',
   authenticate(true),
   checkUserIsAuthorized(PROFESSOR, 'DELETE', 'LISTING/*'),
   deleteListing);
