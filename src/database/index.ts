@@ -70,21 +70,32 @@ export class Database {
 
   static async sync (force: boolean) {
     log.info('Syncing database models');
+
+    log.info('Syncing user model');
     await User.sync({
       force
     });
+
+    log.info('Syncing term model');
     await Term.sync({
       force
     });
+
+    log.info('Syncing listing model');
     await Listing.sync({
       force
     });
+
+    log.info('Syncing content model');
     await Content.sync({
       force
     });
+
+    log.info('Syncing course model');
     await Course.sync({
       force
     });
+
     log.info('Finished syncing database models');
   }
 
