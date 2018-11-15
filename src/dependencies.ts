@@ -2,11 +2,14 @@ import { Database } from './database';
 import SimpleConfig from './config/SimpleConfig';
 import Config from './config/Config';
 import EnvConfig from './config/EnvConfig';
+import HerokuConfig from './config/HerokuConfig';
 
 export let config: Config;
 
-if (process.env.IS_TRAVIS || process.env.NODE_ENV === 'production') {
+if (process.env.IS_TRAVIS) {
   config = new EnvConfig();
+} else if (process.env.IS_HEROKU) {
+  config = new HerokuConfig();
 } else {
   config = new SimpleConfig(
     true,
