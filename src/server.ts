@@ -11,12 +11,19 @@ let server;
 
 (async () => {
   log.info('EASEL is starting...');
-  await database.initialize();
+  try {
+    await database.initialize();
+  } catch (err) {
+    log.error('Error initializing database');
+    log.error(err);
+    database.close();
+    return;
+  }
+  
   log.info('Connection to database has been established successfully.');
 
-  if (config.isDevelopmentMode) {
+  try {
     if (config.shouldForceModelSync) {
-      await Database.sync(true);
       await User.create({
         username: 'admin',
         firstName: 'admin',
@@ -25,11 +32,15 @@ let server;
         hNumber: 'H00000000',
         role: UserRole.ADMIN
       });
+      await Database.sync(true);
     } else {
       await Database.sync(false);
     }
-  } else {
-    await Database.sync(false);
+  } catch (err) {
+    log.error('Error syncing models');
+    log.error(err);
+    database.close();
+    return;
   }
 
   server = await app.listen(expressPort);
