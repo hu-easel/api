@@ -13,4 +13,5 @@ export default interface Config {
   isAuthorizationEnabled: boolean;
   isDevelopmentMode: boolean;
   shouldForceModelSync: boolean;
+  frontEndUrl: string;
 }

@@ -14,6 +14,7 @@ export default class SimpleConfig implements Config {
   isRegistrationEnabled: boolean;
   isDevelopmentMode: boolean;
   shouldForceModelSync: boolean;
+  frontEndUrl: string;
 
   constructor (isAuthenticationEnabled: boolean,
                isAuthorizationEnabled: boolean,
@@ -27,7 +28,8 @@ export default class SimpleConfig implements Config {
                jwtSecret: string,
                isRegistrationEnabled: boolean,
                isDevelopmentMode: boolean,
-               shouldForceModelSync: boolean) {
+               shouldForceModelSync: boolean,
+               frontEndUrl: string) {
     this.isAuthenticationEnabled = isAuthenticationEnabled;
     this.isAuthorizationEnabled = isAuthorizationEnabled;
     this.dbHost = dbHost;
@@ -41,5 +43,6 @@ export default class SimpleConfig implements Config {
     this.isRegistrationEnabled = isRegistrationEnabled;
     this.isDevelopmentMode = isDevelopmentMode;
     this.shouldForceModelSync = shouldForceModelSync;
+    this.frontEndUrl = frontEndUrl;
   }
 }

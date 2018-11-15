@@ -24,7 +24,8 @@ if (process.env.IS_TRAVIS) {
     'secret',
     true,
     true,
-    false);
+    false,
+    '');
 }
 
 export let database = new Database(config);

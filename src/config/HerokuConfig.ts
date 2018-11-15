@@ -13,6 +13,7 @@ export default class HerokuConfig implements Config {
   isAuthorizationEnabled = HerokuConfig.getPrefixedEnvironmentVariable('IS_AUTHORIZATION_ENABLED');
   isDevelopmentMode = HerokuConfig.getPrefixedEnvironmentVariable('IS_DEVELOPMENT_MODE');
   shouldForceModelSync = HerokuConfig.getPrefixedEnvironmentVariable('SHOULD_FORCE_MODEL_SYNC');
+  frontEndUrl = HerokuConfig.getPrefixedEnvironmentVariable('FRONT_END_URL');
 
   static getEnvironmentVariable (name: string): any {
     if (process.env.hasOwnProperty(name)) {

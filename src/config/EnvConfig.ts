@@ -17,6 +17,7 @@ export default class EnvConfig implements Config {
   isAuthorizationEnabled = EnvConfig.getEnvironmentVariable('IS_AUTHORIZATION_ENABLED');
   isDevelopmentMode = EnvConfig.getEnvironmentVariable('IS_DEVELOPMENT_MODE');
   shouldForceModelSync = EnvConfig.getEnvironmentVariable('SHOULD_FORCE_MODEL_SYNC');
+  frontEndUrl = EnvConfig.getEnvironmentVariable('FRONT_END_URL');
 
   static getEnvironmentVariable (name: string): any {
     name = envVarPrefix + name;
