@@ -19,11 +19,12 @@ let server;
     database.close();
     return;
   }
-  
+
   log.info('Connection to database has been established successfully.');
 
   try {
     if (config.shouldForceModelSync) {
+      await Database.sync(true);
       await User.create({
         username: 'admin',
         firstName: 'admin',
@@ -32,7 +33,6 @@ let server;
         hNumber: 'H00000000',
         role: UserRole.ADMIN
       });
-      await Database.sync(true);
     } else {
       await Database.sync(false);
     }
