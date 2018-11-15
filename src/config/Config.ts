@@ -1,9 +1,10 @@
 export default interface Config {
-  dbHost: string;
-  dbPort: number;
-  dbName: string;
-  dbUsername: string;
-  dbPassword: string;
+  dbUrl?: string;
+  dbHost?: string;
+  dbPort?: number;
+  dbName?: string;
+  dbUsername?: string;
+  dbPassword?: string;
   expressPort: number;
   jwtSecret: string;
   jwtIssuer: string;

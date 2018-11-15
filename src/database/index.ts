@@ -7,6 +7,18 @@ import { Listing } from '../features/courses/listings/model';
 import { Content } from '../features/courses/contents/model';
 import { Course } from '../features/courses/model';
 
+const sequelizeOptions = {
+  dialect: 'mysql',
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  operatorsAliases: false,
+  logging: log.trace
+};
+
 export class Database {
   sequelize?: Sequelize;
   private config: Config;
@@ -23,23 +35,22 @@ export class Database {
       log.error('Sequelize is already initialized');
     } else {
       log.info('Initializing sequelize');
-      let { dbHost, dbPort, dbName, dbUsername, dbPassword } = config;
-      this.sequelize = new Sequelize({
-        host: dbHost,
-        port: dbPort,
-        database: dbName,
-        username: dbUsername,
-        password: dbPassword,
-        dialect: 'mysql',
-        pool: {
-          max: 5,
-          min: 0,
-          acquire: 30000,
-          idle: 10000
-        },
-        operatorsAliases: false,
-        logging: log.trace
-      });
+      let { dbHost, dbPort, dbName, dbUsername, dbPassword, dbUrl } = config;
+      if (dbUrl) {
+        this.sequelize = new Sequelize({
+          url: dbUrl,
+          ...sequelizeOptions
+        });
+      } else {
+        this.sequelize = new Sequelize({
+          host: dbHost as string,
+          port: dbPort as number,
+          database: dbName as string,
+          username: dbUsername as string,
+          password: dbPassword as string,
+          ...sequelizeOptions
+        });
+      }
 
       this.sequelize.addModels([
         User,
