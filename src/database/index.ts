@@ -52,6 +52,7 @@ export class Database {
         });
       }
 
+      log.info('Adding models');
       this.sequelize.addModels([
         User,
         Term,
@@ -59,11 +60,16 @@ export class Database {
         Content,
         Course
       ]);
+
+      log.info('Checking connection');
       await this.sequelize.authenticate();
+
+      log.info('Sequelize has been initialized');
     }
   }
 
-  async sync (force: boolean) {
+  static async sync (force: boolean) {
+    log.info('Syncing database models');
     await User.sync({
       force
     });
@@ -79,6 +85,7 @@ export class Database {
     await Course.sync({
       force
     });
+    log.info('Finished syncing database models');
   }
 
   close (): any {
