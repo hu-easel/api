@@ -74,12 +74,12 @@ export class Database {
   static async sync (force: boolean) {
     log.info('Syncing database models');
 
-    models.forEach(async (model) => {
+    for (let model of models) {
       log.info('Syncing model for ' + model.getTableName());
       await model.sync({
         force
       });
-    });
+    }
 
     log.info('Finished syncing database models');
   }
