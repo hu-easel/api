@@ -11,6 +11,7 @@ let server;
 
 (async () => {
   log.info('EASEL is starting...');
+  log.info(config);
   try {
     await database.initialize();
   } catch (err) {
