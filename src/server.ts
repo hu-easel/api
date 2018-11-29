@@ -4,7 +4,7 @@ import { app } from './express';
 import { User, UserRole } from './features/users/model';
 import { Database } from './database';
 
-log.setLevel(log.levels.DEBUG);
+log.setLevel(log.levels.TRACE);
 
 let { expressPort } = config;
 let server;

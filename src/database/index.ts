@@ -10,7 +10,7 @@ import { Course } from '../features/courses/model';
 const sequelizeOptions = {
   dialect: 'mysql',
   pool: {
-    max: 5,
+    max: 10,
     min: 0,
     acquire: 30000,
     idle: 10000
@@ -74,9 +74,9 @@ export class Database {
   static async sync (force: boolean) {
     log.info('Syncing database models');
 
-    models.forEach(model => {
+    models.forEach(async (model) => {
       log.info('Syncing model for ' + model.getTableName());
-      model.sync({
+      await model.sync({
         force
       });
     });
