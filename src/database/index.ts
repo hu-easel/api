@@ -19,6 +19,15 @@ const sequelizeOptions = {
   logging: log.trace
 };
 
+
+const models = [
+  User,
+  Listing,
+  Content,
+  Term,
+  Course
+];
+
 export class Database {
   sequelize?: Sequelize;
   private config: Config;
@@ -53,13 +62,7 @@ export class Database {
       }
 
       log.info('Adding models');
-      this.sequelize.addModels([
-        User,
-        Term,
-        Listing,
-        Content,
-        Course
-      ]);
+      this.sequelize.addModels(models);
 
       log.info('Checking connection');
       await this.sequelize.authenticate();
@@ -71,29 +74,11 @@ export class Database {
   static async sync (force: boolean) {
     log.info('Syncing database models');
 
-    log.info('Syncing user model');
-    await User.sync({
-      force
-    });
-
-    log.info('Syncing term model');
-    await Term.sync({
-      force
-    });
-
-    log.info('Syncing listing model');
-    await Listing.sync({
-      force
-    });
-
-    log.info('Syncing content model');
-    await Content.sync({
-      force
-    });
-
-    log.info('Syncing course model');
-    await Course.sync({
-      force
+    models.forEach(model => {
+      log.info('Syncing model for ' + model.getTableName());
+      model.sync({
+        force
+      });
     });
 
     log.info('Finished syncing database models');
