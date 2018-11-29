@@ -2,7 +2,6 @@ import * as log from 'loglevel';
 import { config, database } from './dependencies';
 import { app } from './express';
 import { User, UserRole } from './features/users/model';
-import { Database } from './database';
 
 log.setLevel(log.levels.TRACE);
 
@@ -24,7 +23,7 @@ let server;
   log.info('Connection to database has been established successfully.');
 
   try {
-    await Database.sync(config.shouldForceModelSync);
+    await database.sync(config.shouldForceModelSync);
   } catch (err) {
     log.error('Error syncing models');
     log.error(err);

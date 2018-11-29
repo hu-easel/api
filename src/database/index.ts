@@ -71,14 +71,23 @@ export class Database {
     }
   }
 
-  static async sync (force: boolean) {
+  async sync (force: boolean) {
+    let sequelize = this.sequelize as Sequelize;
     log.info('Syncing database models');
+
+    if (force) {
+      sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    }
 
     for (let model of models) {
       log.info('Syncing model for ' + model.getTableName());
       await model.sync({
-        force
+        force: force
       });
+    }
+
+    if (force) {
+      sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     log.info('Finished syncing database models');
