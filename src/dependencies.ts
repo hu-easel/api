@@ -25,7 +25,7 @@ if (process.env.IS_TRAVIS) {
     true,
     true,
     false,
-    '');
+    'http://localhost:3000');
 }
 
 export let database = new Database(config);
