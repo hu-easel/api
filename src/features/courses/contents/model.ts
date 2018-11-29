@@ -26,6 +26,7 @@ export class Content extends Model<Content> {
   name: string;
 
   @ForeignKey(() => Listing)
+  @IsUUID(4)
   @Column
   listingUuid: string;
 

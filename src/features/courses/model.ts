@@ -20,7 +20,12 @@ export class Course extends Model<Course> {
   @Column
   uuid: string;
 
+  @AllowNull(false)
+  @Column
+  section: number;
+
   @ForeignKey(() => Content)
+  @IsUUID(4)
   @Column
   contentUuid: string;
 
@@ -28,13 +33,11 @@ export class Course extends Model<Course> {
   content: Content;
 
   @ForeignKey(() => Term)
+  @IsUUID(4)
   @Column
   termUuid: string;
 
   @BelongsTo(() => Term)
   term: Term;
 
-  @AllowNull(false)
-  @Column
-  section: number;
 }

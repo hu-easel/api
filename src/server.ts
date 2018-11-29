@@ -24,24 +24,27 @@ let server;
   log.info('Connection to database has been established successfully.');
 
   try {
-    if (config.shouldForceModelSync) {
-      await Database.sync(true);
-      await User.create({
-        username: 'admin',
-        firstName: 'admin',
-        lastName: 'admin',
-        password: 'admin',
-        hNumber: 'H00000000',
-        role: UserRole.ADMIN
-      });
-    } else {
-      await Database.sync(false);
-    }
+    await Database.sync(config.shouldForceModelSync);
   } catch (err) {
     log.error('Error syncing models');
     log.error(err);
     database.close();
     return;
+  }
+
+  if (!await User.findOne({
+    where: {
+      username: 'admin'
+    }
+  })) {
+    await User.create({
+      username: 'admin',
+      firstName: 'admin',
+      lastName: 'admin',
+      password: 'admin',
+      hNumber: 'H00000000',
+      role: UserRole.ADMIN
+    });
   }
 
   server = await app.listen(expressPort);
