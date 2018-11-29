@@ -20,7 +20,7 @@ if (process.env.IS_TRAVIS) {
     32768,
     'root',
     8080,
-    'cs.harding.edu',
+    'localhost',
     'secret',
     true,
     true,
